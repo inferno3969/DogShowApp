@@ -24,7 +24,7 @@ namespace DogShowApp.Server.Controllers
 
             if (Events.Count == 0)
             {
-                Events.Add(new Event("2/22/2022", "12 PM", "Test", "Test"));
+                Events.Add(new Event("12/22/2022", "12:00 PM", "Test", "Test"));
             }
         }
 

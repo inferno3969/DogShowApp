@@ -27,6 +27,8 @@ namespace DogShowApp.Shared.Data
         [Compare("Password")]
         public string? ConfirmPassword { get; set; }
 
+        public bool isLoggedIn { get; set; } = false;
+
         public User(string firstName, string lastName, string email, string password)
         {
             this.FirstName = firstName;

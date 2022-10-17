@@ -1,12 +1,31 @@
 ﻿@inherits LayoutComponentBase
+@page "/mainpage"
+@using DogShowApp.Shared.Data
+
+@if (user.isLoggedIn == true)
+{
+    StateHasChanged();
+    <UserPage />
+}
+else if (user.isLoggedIn == false)
+{
 
     <TopBar />
-    <div class="page">
+}
+<div class="page">
 
-        <main>
-            <article class="content px-4">
-                @Body
-            </article>
-        </main>
-    </div>
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+@code {
+    User user = new User();
 
+    public bool IsLoggedIn()
+    {
+        user.isLoggedIn = true;
+        return user.isLoggedIn;
+    }
+}
