@@ -1,0 +1,40 @@
+﻿@page "/fetchusers"
+@using DogShowApp.Shared.Data
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (userList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DataGrid TItem="User"
+              Data="@userList"
+              @bind-SelectedRow="@selectedUser"
+              Responsive>
+        <DataGridCommandColumn />
+        <DataGridColumn Field="@nameof(User.FirstName)" Caption="First Name" Sortable="false" />
+        <DataGridColumn Field="@nameof(User.LastName)" Caption="Last Name" Editable />
+        <DataGridColumn Field="@nameof(User.Email)" Caption="Email" Editable />
+ 
+    </DataGrid>
+}
+
+
+@code{
+
+    private List<User>? userList;
+    private User? selectedUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userList = await Http.GetFromJsonAsync<List<User>>("User");
+    }
+
+}

@@ -1,0 +1,118 @@
+﻿@page "/eventcreator"
+@using DogShowApp.Shared.Data
+@inject HttpClient Http
+
+<PageTitle>Event Creator</PageTitle>
+
+<h1>Event Creator</h1>
+
+@if (eventList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Field>
+        <FieldLabel>
+            Edit Mode
+        </FieldLabel>
+        <FieldBody>
+            <Select @bind-SelectedValue="@editMode">
+                <SelectItem Value="DataGridEditMode.Form">Form</SelectItem>
+                <SelectItem Value="DataGridEditMode.Inline">Inline</SelectItem>
+                <SelectItem Value="DataGridEditMode.Popup">Popup</SelectItem>
+            </Select>
+        </FieldBody>
+    </Field>
+
+    <DataGrid TItem="TempEvent" Data="@eventList" @bind-SelectedRow="@selectedEvent" Responsive Editable ShowPager CommandMode="DataGridCommandMode.ButtonRow"
+              EditMode="editMode" RowInserting="@DoNewRowPrep" RowInserted="@OnRowInserted">
+        <DataGridColumns>
+            <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false">
+                <SaveCommandTemplate>
+                    <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </SaveCommandTemplate>
+                <CancelCommandTemplate>
+                    <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </CancelCommandTemplate>
+            </DataGridCommandColumn>
+            <DataGridColumn Field="@nameof(newEvent.Date)" Caption="Date" Sortable="true" Editable />
+            <DataGridColumn Field="@nameof(newEvent.Time)" Caption="Time" Editable />
+            <DataGridColumn Field="@nameof(newEvent.EventName)" Caption="Name" Editable />
+            <DataGridColumn Field="@nameof(newEvent.EventDescription)" Caption="Description" Editable />
+        </DataGridColumns>
+        <ButtonRowTemplate>
+            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
+            <Button Color="Color.Primary" Disabled="(selectedEvent is null)" Clicked="context.EditCommand.Clicked">Edit</Button>
+            <Button Color="Color.Danger" Disabled="(selectedEvent is null)" Clicked="context.DeleteCommand.Clicked">Delete</Button>
+            <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Clear Filter</Button>
+        </ButtonRowTemplate>
+    </DataGrid>
+}
+
+@code {
+    public class TempEvent
+    {
+        public DateOnly Date { get; set; }
+
+        public TimeOnly Time { get; set; }
+
+        public string? EventName { get; set; }
+
+        public string? EventDescription { get; set; }
+
+        public TempEvent(DateOnly date, TimeOnly time, string eventName, string eventDescription)
+        {
+            this.Date = date;
+            this.Time = time;
+            this.EventName = eventName;
+            this.EventDescription = eventDescription;
+        }
+
+        public TempEvent() { }
+    }
+
+    TempEvent newEvent = new TempEvent();
+
+    private TempEvent? selectedEvent;
+    private List<TempEvent>? eventList = new List<TempEvent>();
+    private DataGridEditMode editMode = DataGridEditMode.Form;
+
+    DateOnly? date;
+    string? time;
+    string? eventName;
+    string? eventDescription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<Event>? _eventList = await Http.GetFromJsonAsync<List<Event>>("Event");
+
+        if (_eventList != null)
+        {
+            foreach (Event _event in _eventList)
+            {
+                eventList.Add(new TempEvent());
+                eventList.Last().Date = DateOnly.Parse(_event.Date);
+                eventList.Last().Time = TimeOnly.Parse(_event.Time);
+                eventList.Last().EventName = _event.EventName;
+                eventList.Last().EventDescription = _event.EventDescription;
+            }
+        }
+    }
+
+    public void DoNewRowPrep(CancellableRowChange<TempEvent, Dictionary<String, Object>> e)
+    {
+
+    }
+
+    private async void OnRowInserted(SavedRowItem<TempEvent, Dictionary<string, object>> e)
+    {
+        Event tempEvent = new Event();
+        tempEvent.Date = e.Item.Date.ToString();
+        tempEvent.Time = e.Item.Time.ToString();
+        tempEvent.EventName = e.Item.EventName;
+        tempEvent.EventDescription = e.Item.EventDescription;
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync("Event", tempEvent);
+    }
+    }
