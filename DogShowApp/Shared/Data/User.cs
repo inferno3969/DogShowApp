@@ -16,6 +16,10 @@ namespace DogShowApp.Shared.Data
         [EmailAddress(ErrorMessage = "Invalid email.")]
         public string Email { get; set; }
 
+        [Required]
+        [StringLength(10, ErrorMessage = "Name is too long.")]
+        public string Username { get; set; }
+
         [Required(ErrorMessage = "Password is required")]
         [StringLength(8, ErrorMessage = "Must be between 5 and 8 characters", MinimumLength = 5)]
         [DataType(DataType.Password)]
@@ -31,10 +35,11 @@ namespace DogShowApp.Shared.Data
 
         public bool IsAdmin { get; set; } = false;
 
-        public User(string firstName, string lastName, string email, string password, bool isAdmin)
+        public User(string firstName, string lastName, string username, string email, string password, bool isAdmin)
         {
             this.FirstName = firstName;
             this.LastName = lastName;
+            this.Username = username;
             this.Email = email;
             this.Password = password;
             this.IsAdmin = isAdmin;
