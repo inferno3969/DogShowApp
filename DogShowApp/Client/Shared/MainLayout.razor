@@ -1,13 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @page "/mainpage"
 @using DogShowApp.Shared.Data
-@using DogShowApp.Shared.Services
+@using DogShowApp.Client.Pages
 
-@if (user.isLoggedIn == true)
+@if (Login.user.isLoggedIn == true)
 {
     <UserPage />
 }
-else if (user.isLoggedIn == false)
+else if (Login.user.isLoggedIn == false)
 {
     <TopBar />
 }
@@ -21,12 +21,10 @@ else if (user.isLoggedIn == false)
 </div>
 
 @code {
-    User user = new User();
 
-    public bool IsLoggedIn(bool loggedIn)
+    protected override async Task OnInitializedAsync()
     {
-        loggedIn = true;
+        await base.OnInitializedAsync();
         StateHasChanged();
-        return loggedIn;
     }
 }
