@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DogShowApp.Shared.Data
 {
-    internal class Bio
+    public class Bio
     {
         public string? DogName { get; set; }
         public string? DogDescription { get; set; }

@@ -1,0 +1,125 @@
+﻿@page "/biocreator"
+@using DogShowApp.Shared.Data
+@inject HttpClient Http
+
+<PageTitle>Bio Creator</PageTitle>
+
+<h1>Biography Creator</h1>
+
+@if (bioList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Field>
+        <FieldLabel>
+            Edit Mode
+        </FieldLabel>
+        <FieldBody>
+            <Select @bind-SelectedValue="@editMode">
+                <SelectItem Value="DataGridEditMode.Form">Form</SelectItem>
+                <SelectItem Value="DataGridEditMode.Inline">Inline</SelectItem>
+                <SelectItem Value="DataGridEditMode.Popup">Popup</SelectItem>
+            </Select>
+        </FieldBody>
+    </Field>
+
+    <DataGrid TItem="TempBio" Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Editable ShowPager CommandMode="DataGridCommandMode.ButtonRow"
+          EditMode="editMode" RowInserting="@DoNewRowPrep" RowInserted="@OnRowInserted">
+        <DataGridColumns>
+            <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false">
+                <SaveCommandTemplate>
+                    <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </SaveCommandTemplate>
+                <CancelCommandTemplate>
+                    <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </CancelCommandTemplate>
+            </DataGridCommandColumn>
+            <DataGridColumn Field="@nameof(newBio.DogName)" Caption="Name of Dog" Sortable="true" Editable />
+            <DataGridColumn Field="@nameof(newBio.DogDescription)" Caption="Dog Info" Editable />
+            <DataGridColumn Field="@nameof(newBio.TrainerName)" Caption="Trainer's Name'" Editable />
+            <DataGridColumn Field="@nameof(newBio.DogImageURL)" Caption="html link to dogs' picutre" Editable />
+            <DataGridColumn Field="@nameof(newBio.TrainerImageURL)" Caption="html link to trainers' picture" Editable />
+        </DataGridColumns>
+        <ButtonRowTemplate>
+            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
+            <Button Color="Color.Primary" Disabled="(selectedBio is null)" Clicked="context.EditCommand.Clicked">Edit</Button>
+            <Button Color="Color.Danger" Disabled="(selectedBio is null)" Clicked="context.DeleteCommand.Clicked">Delete</Button>
+            <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Clear Filter</Button>
+        </ButtonRowTemplate>
+    </DataGrid>
+}
+
+@code {
+    public class TempBio
+    {
+        public string? DogName { get; set; }
+
+        public string? DogDescription { get; set; }
+
+        public string? TrainerName { get; set; }
+
+        public string? DogImageURL { get; set; }
+
+        public string? TrainerImageURL { get; set; }
+
+
+        public TempBio(string dogName, string dogDescription, string trainerName, string dogImageURL, string trainerImageURL)
+        {
+            this.DogName = dogName;
+            this.DogDescription = dogDescription;
+            this.TrainerName = trainerName;
+            this.DogImageURL = dogImageURL;
+            this.TrainerImageURL = trainerImageURL;
+        }
+
+        public TempBio() { }
+    }
+    TempBio newBio = new TempBio();
+
+    private TempBio? selectedBio;
+    private List<TempBio>? bioList = new List<TempBio>();
+    private DataGridEditMode editMode = DataGridEditMode.Form;
+
+    string? dogName;
+    string? dogDescription;
+    string? trainerName;
+    string? dogImageURL;
+    string? trainerImageURL;
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<Bio>? _bioList = await Http.GetFromJsonAsync<List<Bio>>("Bio");
+
+        if (_bioList != null)
+        {
+            foreach (Bio _bio in _bioList)
+            {
+                bioList.Add(new TempBio());
+                bioList.Last().DogName = _bio.DogName;
+                bioList.Last().DogDescription = _bio.DogDescription;
+                bioList.Last().TrainerName = _bio.TrainerName;
+                bioList.Last().DogImageURL = _bio.DogImageURL;
+                bioList.Last().TrainerImageURL = _bio.TrainerImageURL;
+            }
+        }
+    }
+
+    public void DoNewRowPrep(CancellableRowChange<TempBio, Dictionary<String, Object>> e)
+    {
+
+    }
+
+    private async void OnRowInserted(SavedRowItem<TempBio, Dictionary<string, object>> e)
+    {
+        Bio tempBio = new Bio();
+        tempBio.DogName = e.Item.DogName;
+        tempBio.DogDescription = e.Item.DogDescription;
+        tempBio.TrainerName = e.Item.TrainerName;
+        tempBio.DogImageURL = e.Item.DogImageURL;
+        tempBio.TrainerImageURL = e.Item.TrainerImageURL;
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync("Bio", tempBio);
+    }
+}
