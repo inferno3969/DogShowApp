@@ -26,7 +26,7 @@ namespace DogShowApp.Server.Controllers
 
             if (Bios.Count == 0)
             {
-                Bios.Add(new Bio("Cleetus McPaw", "German Shiza", "Rammstein von McBraun", "http://mydogsimage.com/mydog.jpg", "http://mytrainersimage.com/mytrainer.jpg"));
+                //Bios.Add(new Bio("Cleetus McPaw", "German Shiza", "Rammstein von McBraun", "http://mydogsimage.com/mydog.jpg", "http://mytrainersimage.com/mytrainer.jpg"));
             }
         }
 

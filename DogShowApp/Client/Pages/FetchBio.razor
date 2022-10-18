@@ -1,0 +1,41 @@
+﻿@page "/fetchbio"
+@using DogShowApp.Shared.Data
+@inject HttpClient Http
+
+<PageTitle>Biographies</PageTitle>
+
+<h1>Dog/Trainer Biographies</h1>
+
+<p></p>
+
+@if (bioList == null)
+{
+        <p><em>Loading...</em></p>
+}
+else
+{
+        <DataGrid TItem="Bio"
+              Data="@bioList"
+              @bind-SelectedRow="@selectedBio"
+              Responsive>
+            <DataGridCommandColumn />
+            <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" />
+        <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Breed:" />
+        <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name:" />
+        <DataGridColumn Field="@nameof(Bio.)" Caption="Description" />
+
+        </DataGrid>
+}
+
+
+@code {
+
+    private List<Bio>? bioList;
+    private Bio? selectedBio;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bioList = await Http.GetFromJsonAsync<List<Bio>>("Bio");
+    }
+
+}
