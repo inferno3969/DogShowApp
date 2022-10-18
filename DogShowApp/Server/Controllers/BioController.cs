@@ -26,7 +26,7 @@ namespace DogShowApp.Server.Controllers
 
             if (Bios.Count == 0)
             {
-                //Bios.Add(new Bio("Cleetus McPaw", "German Shiza", "Rammstein von McBraun", "http://mydogsimage.com/mydog.jpg", "http://mytrainersimage.com/mytrainer.jpg"));
+                Bios.Add(new Bio("Cleetus McPaw", "German Shiza", "Rammstein von McBraun", "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F564x%2Fc6%2F60%2Ff9%2Fc660f9b3be0dba367ea009e192dbd24d.jpg&f=1&nofb=1&ipt=78421f4096cf7aefb6b2f0c474034a79e0000cde55070d10a141433114f2a607&ipo=images", "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic1.srcdn.com%2Fwordpress%2Fwp-content%2Fuploads%2F2020%2F11%2Ftim-and-eric-mind-blown.jpg&f=1&nofb=1&ipt=15c1412ec4062adbfe76cf4903718e37e9cc536409eaafb9c4091efb6176e72d&ipo=images"));
             }
         }
 
