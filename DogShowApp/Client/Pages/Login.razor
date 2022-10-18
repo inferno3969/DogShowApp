@@ -1,7 +1,9 @@
 ﻿@page "/login"
 @using DogShowApp.Shared.Data
+@using DogShowApp.Shared.Services
 @using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
+@inject AppState AppState
 @inject NavigationManager navigationManager
 
 <PageTitle>Login</PageTitle>
@@ -135,7 +137,7 @@
 
 @code {
 
-    User user = new User();
+    public static User user = new User();
 
     List<User>? userList;
 
@@ -166,10 +168,11 @@
         {
             navigationManager.NavigateTo("/mainpage");
             user.isLoggedIn = true;
+            AppState.LoggedIn = true;
         }
         else
         {
-            
+
         }
 
     }
