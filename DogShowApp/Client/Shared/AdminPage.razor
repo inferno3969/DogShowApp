@@ -1,0 +1,44 @@
+﻿@using DogShowApp.Client.Pages
+@using DogShowApp.Shared.Data
+<Bar Breakpoint="Breakpoint.Desktop"
+     Background="Background.Light"
+     ThemeContrast="ThemeContrast.Light">
+    <BarBrand>
+        Dog Show
+    </BarBrand>
+    <BarToggler />
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="/">Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="/fetchevents">Events</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>Dropdown</BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem To="/eventcreator">Create Event</BarDropdownItem>
+                        <BarDropdownDivider />
+                        <BarDropdownItem To="/fetchusers">Manage Users</BarDropdownItem>
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+        </BarStart>
+        <BarEnd>
+            <BarItem>
+                <Button Clicked="@LogOut" Color="Color.Primary" Type="ButtonType.Link" To="/">Log out</Button>
+            </BarItem>
+        </BarEnd>
+    </BarMenu>
+</Bar>
+
+@code {
+
+    private void LogOut()
+    {
+        Login.user = new User();
+        StateHasChanged();
+    }
+}

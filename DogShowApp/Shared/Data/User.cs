@@ -29,12 +29,15 @@ namespace DogShowApp.Shared.Data
 
         public bool isLoggedIn { get; set; } = false;
 
-        public User(string firstName, string lastName, string email, string password)
+        public bool IsAdmin { get; set; } = false;
+
+        public User(string firstName, string lastName, string email, string password, bool isAdmin)
         {
             this.FirstName = firstName;
             this.LastName = lastName;
             this.Email = email;
             this.Password = password;
+            this.IsAdmin = isAdmin;
         }
 
         public User() { }

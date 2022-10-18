@@ -2,13 +2,17 @@
 @using DogShowApp.Shared.Data
 @using DogShowApp.Client.Pages
 
-@if (Login.user.isLoggedIn == true)
+@if (Login.user.isLoggedIn == true && Login.user.IsAdmin == false)
 {
     <UserPage />
 }
-else if (Login.user.isLoggedIn == false)
+else if (Login.user.isLoggedIn == false && Login.user.IsAdmin == false)
 {
     <TopBar />
+}
+else if (Login.user.IsAdmin == true)
+{
+    <AdminPage />
 }
 <div class="page">
 

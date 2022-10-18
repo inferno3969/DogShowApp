@@ -149,6 +149,7 @@
     string email;
     string password;
     string confirmPassword;
+    bool isAdmin;
     bool rememberMe;
 
     private Task OnSelectedTabChanged(string name)
@@ -160,11 +161,17 @@
 
     async Task OnLoginClicked()
     {
-        userList = await Http.GetFromJsonAsync<List<User>>($"User?email={user.Email}&password={user.Password}");
+        userList = await Http.GetFromJsonAsync<List<User>>($"User?email={email}&password={password}&isAdmin={isAdmin}");
 
-        if (email == user.Email && password == user.Password)
+
+        if (isAdmin == false)
         {
             user.isLoggedIn = true;
+            navigationManager.NavigateTo("/");
+        }
+        if (email == "admin@admin.com" && password == "admin420")
+        {
+            user.IsAdmin = true;
             navigationManager.NavigateTo("/");
         }
         else

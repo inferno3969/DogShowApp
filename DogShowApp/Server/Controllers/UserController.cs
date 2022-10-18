@@ -18,13 +18,14 @@ namespace DogShowApp.Server.Controllers
 
             if (Users.Count == 0)
             {
-                Users.Add(new User("Jim", "Bob", "jimbob@jimbob.com", "jimbob123"));
-                Users.Add(new User("Amanda", "Jones", "amandajones@amandajones.com", "amandajones123"));
+                Users.Add(new User("Jim", "Bob", "jimbob@jimbob.com", "jimbob123", false));
+                Users.Add(new User("Amanda", "Jones", "amandajones@amandajones.com", "amandajones123", false));
+                Users.Add(new User("Admin", "Admin", "admin@admin.com", "admin420", true));
             }
         }
 
         [HttpGet]
-        public IEnumerable<User> Get(string? email, string? password)
+        public IEnumerable<User> Get(string? email, string? password, bool? isAdmin)
         {
             if (email == null && password == null)
             {
