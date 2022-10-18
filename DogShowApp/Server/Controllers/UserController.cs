@@ -18,15 +18,16 @@ namespace DogShowApp.Server.Controllers
 
             if (Users.Count == 0)
             {
-                Users.Add(new User("Jim", "Bob", "jimbob@jimbob.com", "jimbob123"));
-                Users.Add(new User("Amanda", "Jones", "amandajones@amandajones.com", "amandajones123"));
+                Users.Add(new User("Jim", "Bob", "jimbo123", "jimbob@jimbob.com", "jimbob123", false));
+                Users.Add(new User("Amanda", "Jones", "amandajones22", "amandajones@amandajones.com", "amandajones123", false));
+                Users.Add(new User("Admin", "Admin", "bigchungusadmin420", "admin@admin.com", "admin420", true));
             }
         }
 
         [HttpGet]
-        public IEnumerable<User> Get(string? email, string? password)
+        public IEnumerable<User> Get(string? username, string? password)
         {
-            if (email == null && password == null)
+            if (username == null && password == null)
             {
                 return Users;
             }
@@ -34,7 +35,7 @@ namespace DogShowApp.Server.Controllers
             {
                 foreach (User user in Users)
                 {
-                    if (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && user.Password == password)
+                    if (user.Username == username && user.Password == password)
                     {
                         List<User> temp = new List<User>();
                         temp.Add(user);
