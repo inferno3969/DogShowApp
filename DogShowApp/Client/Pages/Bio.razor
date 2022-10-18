@@ -1,12 +1,11 @@
-﻿@page "/fetchevents"
+﻿@page "/bio"
 @using DogShowApp.Shared.Data
 @inject HttpClient Http
 
-<PageTitle>Events Calender</PageTitle>
+<PageTitle>Dog-Trainer Bios</PageTitle>
 
-<h1>Upcoming Events</h1>
+<h1>Dog/Trainer Bio's</h1>
 
-<p></p>
 
 @if (eventList == null)
 {
@@ -15,9 +14,9 @@
 else
 {
     <DataGrid TItem="Event"
-              Data="@eventList"
-              @bind-SelectedRow="@selectedEvent"
-              Responsive>
+          Data="@eventList"
+          @bind-SelectedRow="@selectedEvent"
+          Responsive>
         <DataGridCommandColumn />
         <DataGridColumn Field="@nameof(Event.Date)" Caption="Date" Sortable="false" />
         <DataGridColumn Field="@nameof(Event.Time)" Caption="Time" />
@@ -28,7 +27,7 @@ else
 }
 
 
-@code{
+@code {
 
     private List<Event>? eventList;
     private Event? selectedEvent;
