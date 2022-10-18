@@ -20,9 +20,11 @@ else
               Responsive>
             <DataGridCommandColumn />
             <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" />
-        <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Breed:" />
+        <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Bio: " />
         <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name:" />
-        <DataGridColumn Field="@nameof(Bio.)" Caption="Description" />
+        <Figure Size="FigureSize.Is256x256">
+            <FigureImage Source="img/IMG_4018.jpg" />
+        </Figure>
 
         </DataGrid>
 }
