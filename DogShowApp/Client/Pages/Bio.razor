@@ -2,12 +2,12 @@
 @using DogShowApp.Shared.Data
 @inject HttpClient Http
 
-<PageTitle>Dog-Trainer Bios</PageTitle>
+<PageTitle>Dog and Trainer Bios</PageTitle>
 
-<h1>Dog/Trainer Bio's</h1>
+<h1>Dog and Trainer Bio's</h1>
 
 
-@if (eventList == null)
+@if (bioList == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -28,13 +28,15 @@ else
 
 
 @code {
-
-    private List<Event>? eventList;
-    private Event? selectedEvent;
-
-    protected override async Task OnInitializedAsync()
+    public class TempBio
     {
-        eventList = await Http.GetFromJsonAsync<List<Event>>("Event");
-    }
+        public 
+        private List<Event>? eventList;
+        private Event? selectedEvent;
 
+        protected override async Task OnInitializedAsync()
+        {
+            eventList = await Http.GetFromJsonAsync<List<Event>>("Event");
+        }
+    }
 }
