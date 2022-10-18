@@ -1,7 +1,9 @@
 ﻿@page "/login"
 @using DogShowApp.Shared.Data
+@using DogShowApp.Shared.Services
 @using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
+@inject NavigationManager navigationManager
 
 <PageTitle>Login</PageTitle>
 
@@ -134,7 +136,7 @@
 
 @code {
 
-    User user = new User();
+    public static User user = new User();
 
     List<User>? userList;
 
@@ -159,12 +161,18 @@
 
     async Task OnLoginClicked()
     {
-        if (await loginValidationsRef.ValidateAll())
-        {
-            // do the real login here
+        userList = await Http.GetFromJsonAsync<List<User>>($"User?email={user.Email}&password={user.Password}");
 
-            await loginValidationsRef.ClearAll();
+        if (email == user.Email && password == user.Password)
+        {
+            navigationManager.NavigateTo("/userpage", true, true);
+            user.isLoggedIn = true;
         }
+        else
+        {
+
+        }
+
     }
 
     async Task OnRegisterClicked()

@@ -53,7 +53,7 @@ else
 @code {
     public class TempEvent
     {
-        public DateOnly Date { get; set; }
+        public DateOnly? Date { get; set; }
 
         public TimeOnly Time { get; set; }
 
@@ -71,7 +71,6 @@ else
 
         public TempEvent() { }
     }
-
     TempEvent newEvent = new TempEvent();
 
     private TempEvent? selectedEvent;
@@ -79,7 +78,7 @@ else
     private DataGridEditMode editMode = DataGridEditMode.Form;
 
     DateOnly? date;
-    string? time;
+    TimeOnly? time;
     string? eventName;
     string? eventDescription;
 
@@ -92,7 +91,7 @@ else
             foreach (Event _event in _eventList)
             {
                 eventList.Add(new TempEvent());
-                eventList.Last().Date = DateOnly.Parse(_event.Date);
+                eventList.Last().Date = DateOnly.Parse(_event.Date.ToString());
                 eventList.Last().Time = TimeOnly.Parse(_event.Time);
                 eventList.Last().EventName = _event.EventName;
                 eventList.Last().EventDescription = _event.EventDescription;

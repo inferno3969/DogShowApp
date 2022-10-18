@@ -24,9 +24,25 @@ namespace DogShowApp.Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<User> Get()
+        public IEnumerable<User> Get(string? email, string? password)
         {
-            return Users;
+            if (email == null && password == null)
+            {
+                return Users;
+            }
+            else
+            {
+                foreach (User user in Users)
+                {
+                    if (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && user.Password == password)
+                    {
+                        List<User> temp = new List<User>();
+                        temp.Add(user);
+                        return temp;
+                    }
+                }
+                return null!; 
+            }
         }
 
         [HttpPost]
