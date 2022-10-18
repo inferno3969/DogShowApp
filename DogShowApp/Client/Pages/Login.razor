@@ -3,7 +3,6 @@
 @using DogShowApp.Shared.Services
 @using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
-@inject AppState AppState
 @inject NavigationManager navigationManager
 
 <PageTitle>Login</PageTitle>
@@ -166,9 +165,8 @@
 
         if (email == user.Email && password == user.Password)
         {
-            navigationManager.NavigateTo("/mainpage");
+            navigationManager.NavigateTo("/userpage", true, true);
             user.isLoggedIn = true;
-            AppState.LoggedIn = true;
         }
         else
         {

@@ -1,15 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @page "/mainpage"
-@inject AppState AppState
 @using DogShowApp.Shared.Data
 @using DogShowApp.Shared.Services
-@implements IDisposable
 
-@if (AppState.LoggedIn == true)
+@if (user.isLoggedIn == true)
 {
     <UserPage />
 }
-else if (AppState.LoggedIn == false)
+else if (user.isLoggedIn == false)
 {
     <TopBar />
 }
@@ -30,15 +28,5 @@ else if (AppState.LoggedIn == false)
         loggedIn = true;
         StateHasChanged();
         return loggedIn;
-    }
-
-    protected override void OnInitialized()
-    {
-        AppState.OnChange += StateHasChanged;
-    }
-
-    public void Dispose()
-    {
-        AppState.OnChange -= StateHasChanged;
     }
 }
