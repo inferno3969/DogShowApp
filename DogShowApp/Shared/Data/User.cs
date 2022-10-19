@@ -35,7 +35,7 @@ namespace DogShowApp.Shared.Data
         public bool IsAdmin { get; set; } = false;
 
         [MinLength(0, ErrorMessage = "You can't have negative amount of tickets.")]
-        public int numOfRegularTickets { get; set; } = 0;
+        public int numOfEventTickets { get; set; } = 0;
 
         [MinLength(0, ErrorMessage = "You can't have negative amount of tickets.")]
         public int numOfSeasonTickets { get; set; } = 0;

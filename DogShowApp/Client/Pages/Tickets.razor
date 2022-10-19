@@ -9,26 +9,55 @@
 
 <Steps @ref="stepsRef" @bind-SelectedStep="selectedStep" NavigationAllowed="NavigationAllowed">
     <Items>
-        <Step Name="1">Ticket Type</Step>
-        <Step Name="2">Ticket</Step>
-        <Step Name="3">Step 3</Step>
-        <Step Name="4">Step 4</Step>
+        <Step Name="1">
+            <Marker>
+                <Icon Name="IconName.TicketAlt" />
+            </Marker>
+            <Caption>
+                Tickets
+            </Caption>
+        </Step>
+        <Step Name="2">
+            <Marker>
+                <Icon Name="IconName.Pen" />
+            </Marker>
+            <Caption>
+                Review
+            </Caption>
+        </Step>
+        <Step Name="3">
+            <Marker>
+                <Icon Name="IconName.ShoppingCart" />
+            </Marker>
+            <Caption>
+                Checkout
+            </Caption>
+        </Step>
+        <Step Name="4">
+            <Marker>
+                <Icon Name="IconName.Flag" />
+            </Marker>
+            <Caption>
+                Finish
+            </Caption>
+        </Step>
     </Items>
     <Content>
         <StepPanel Name="1">
             <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" Pills FullWidth>
                 <Items>
-                    <Tab Name="regularticket">Regular Ticket</Tab>
+                    <Tab Name="eventticket">Event Ticket</Tab>
                     <Tab Name="seasonticket">Season Ticket</Tab>
                 </Items>
                 <Content>
-                    <TabPanel Name="regularticket">
+                    <TabPanel Name="eventticket">
                         <Card>
                             <CardBody>
                                 <Field>
-                                    <FieldLabel>Number of regular tickets:</FieldLabel>
+                                    <FieldLabel>Enter in the number of event tickets you would like to purchase.</FieldLabel>
+                                    <FieldLabel>Event tickets are for one event per one event ticket.</FieldLabel>
                                     <Div Display="Display.Flex" Class="justify-content-center">
-                                        <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets." Min=1>
+                                        <NumericEdit TValue="int" @bind-Value="@numOfEventTickets" Placeholder="Enter number of tickets." Min=1>
                                             <Feedback>
                                                 <ValidationNone>Please Enter Your Email. </ValidationNone>
                                                 <ValidationSuccess>Email is good</ValidationSuccess>
@@ -48,7 +77,8 @@
                         <Card>
                             <CardBody>
                                 <Field>
-                                    <FieldLabel>Number of season tickets:</FieldLabel>
+                                    <FieldLabel>Enter in the number of season tickets you would like to purchase.</FieldLabel>
+                                    <FieldLabel>Season tickets are for the whole season per one season ticket.</FieldLabel>
                                     <Div Display="Display.Flex" Class="justify-content-center">
                                         <NumericEdit TValue="int" @bind-Value="@numOfSeasonTickets" Placeholder="Enter number of tickets." Min=1>
                                         </NumericEdit>
@@ -69,13 +99,15 @@
             <Card>
                 <CardBody>
                     <Jumbotron Background="Background.Transparent" Margin="Margin.Is4.FromBottom">
-                        <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
+                        <JumbotronTitle Size="JumbotronTitleSize.Is4">Order Review</JumbotronTitle>
                         <JumbotronSubtitle>
-                            This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                            Please review your order. If you want to edit the amount of each ticket type, press the "Edit Tickets" button.
+                            If you want to cancel your order, press the "Cancel Order" button. If you want to proceed to checkout,
+                            press the "Checkout" button.
                         </JumbotronSubtitle>
                         <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
-                            Regular Tickets: @Login.user.numOfRegularTickets | Price: @regularTicketPrice
+                            Regular Tickets: @Login.user.numOfEventTickets | Price: @eventTicketPrice
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
@@ -83,6 +115,8 @@
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
                         <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
+                        <Button Color="Color.Danger" Clicked="@CancelOrder">Cancel Order</Button>
+                        <Button Color="Color.Success" Clicked="@Checkout">Checkout</Button>
                     </Jumbotron>
 
                     <Modal @ref="modalRef">
@@ -94,7 +128,7 @@
                             <ModalBody>
                                 <Field>
                                     <FieldLabel>Regular Tickets</FieldLabel>
-                                    <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets" />
+                                    <NumericEdit TValue="int" @bind-Value="@numOfEventTickets" Placeholder="Enter number of tickets" />
                                 </Field>
                                 <Field>
                                     <FieldLabel>Season Tickets</FieldLabel>
@@ -111,7 +145,100 @@
             </Card>
         </StepPanel>
         <StepPanel Name="3">
-            Step 3
+            <Jumbotron Background="Background.Light" Margin="Margin.Is4.FromBottom">
+                <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
+                <JumbotronSubtitle>
+                    This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                </JumbotronSubtitle>
+                <Divider></Divider>
+                <Paragraph>
+                    <div class="row">
+                        <div class="col-75">
+                            <div class="container">
+                                <form action="/action_page.php">
+
+                                    <div class="row">
+                                        <div class="col-50">
+                                            <h3>Billing Address</h3>
+                                            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                                            <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
+                                            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                                            <input type="text" id="email" name="email" placeholder="john@example.com">
+                                            <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+                                            <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
+                                            <label for="city"><i class="fa fa-institution"></i> City</label>
+                                            <input type="text" id="city" name="city" placeholder="New York">
+
+                                            <div class="row">
+                                                <div class="col-50">
+                                                    <label for="state">State</label>
+                                                    <input type="text" id="state" name="state" placeholder="NY">
+                                                </div>
+                                                <div class="col-50">
+                                                    <label for="zip">Zip</label>
+                                                    <input type="text" id="zip" name="zip" placeholder="10001">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-50">
+                                            <h3>Payment</h3>
+                                            <label for="fname">Accepted Cards</label>
+                                            <div class="icon-container">
+                                                <i class="fa fa-cc-visa" style="color:navy;"></i>
+                                                <i class="fa fa-cc-amex" style="color:blue;"></i>
+                                                <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                                                <i class="fa fa-cc-discover" style="color:orange;"></i>
+                                            </div>
+                                            <label for="cname">Name on Card</label>
+                                            <input type="text" id="cname" name="cardname" placeholder="John More Doe">
+                                            <label for="ccnum">Credit card number</label>
+                                            <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                                            <label for="expmonth">Exp Month</label>
+                                            <input type="text" id="expmonth" name="expmonth" placeholder="September">
+
+                                            <div class="row">
+                                                <div class="col-50">
+                                                    <label for="expyear">Exp Year</label>
+                                                    <input type="text" id="expyear" name="expyear" placeholder="2018">
+                                                </div>
+                                                <div class="col-50">
+                                                    <label for="cvv">CVV</label>
+                                                    <input type="text" id="cvv" name="cvv" placeholder="352">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <label>
+                                        <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
+                                    </label>
+                                    <input type="submit" value="Continue to checkout" class="btn">
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-25">
+                            <div class="container">
+                                <h4>
+                                    Cart
+                                    <span class="price" style="color:black">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <b>4</b>
+                                    </span>
+                                </h4>
+                                <p><a href="#">Product 1</a> <span class="price">$15</span></p>
+                                <p><a href="#">Product 2</a> <span class="price">$5</span></p>
+                                <p><a href="#">Product 3</a> <span class="price">$8</span></p>
+                                <p><a href="#">Product 4</a> <span class="price">$2</span></p>
+                                <hr>
+                                <p>Total <span class="price" style="color:black"><b>$30</b></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </Paragraph>
+                
+            </Jumbotron>
         </StepPanel>
         <StepPanel Name="4">
             Step 4
@@ -138,13 +265,15 @@
     private string selectedStep = "1";
 
     string ticketType;
-    int numOfRegularTickets;
+    int numOfEventTickets;
     int numOfSeasonTickets;
 
-    decimal regularTicketPrice;
+    decimal eventTicketPrice;
     decimal seasonTicketPrice;
     decimal finalPrice;
 
+
+    string creditCardNumber;
     private Modal modalRef;
 
     private Task ShowModal()
@@ -154,9 +283,9 @@
 
     private Task HideModal()
     {
-        Login.user.numOfRegularTickets = numOfRegularTickets;
+        Login.user.numOfEventTickets = numOfEventTickets;
         Login.user.numOfSeasonTickets = numOfSeasonTickets;
-        regularTicketPrice = ticket.regularTicketsPrice * numOfRegularTickets;
+        numOfEventTickets = ticket.numOfEventTickets * numOfEventTickets;
         seasonTicketPrice = ticket.seasonTicketsPrice * numOfSeasonTickets;
         return modalRef.Hide();
     }
@@ -171,7 +300,7 @@
         return true;
     }
 
-    string selectedTab = "regularticket";
+    string selectedTab = "eventticket";
 
     private Task OnSelectedTabChanged(string name)
     {
@@ -183,11 +312,11 @@
 
     private void AddToCart()
     {
-        if (selectedTab == "regularticket")
+        if (selectedTab == "eventticket")
         {
-            Login.user.numOfRegularTickets += numOfRegularTickets;
-            regularTicketPrice = ticket.regularTicketsPrice;
-            regularTicketPrice *= Login.user.numOfRegularTickets;
+            Login.user.numOfEventTickets += numOfEventTickets;
+            eventTicketPrice = ticket.eventTicketsPrice;
+            eventTicketPrice *= Login.user.numOfEventTickets;
         }
         if (selectedTab == "seasonticket")
         {
@@ -195,6 +324,18 @@
             seasonTicketPrice = ticket.seasonTicketsPrice;
             seasonTicketPrice *= Login.user.numOfSeasonTickets;
         }
+    }
+
+    private void CancelOrder()
+    {
+        Login.user.numOfEventTickets = 0;
+        Login.user.numOfSeasonTickets = 0;
+        navigationManager.NavigateTo("/");
+    }
+
+    private void Checkout()
+    {
+        selectedStep = "3";
     }
 
 }
