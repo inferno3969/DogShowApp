@@ -43,6 +43,11 @@ namespace DogShowApp.Server.Controllers
             Bios.Add(_bio);
         }
 
+        [HttpDelete]
+
+        public void DeleteLast(Bio _bio) { Bios.Remove(_bio); }
+
+        public void Delete() { }
         /*  We no need Datetimes in hya
     
         public TimeSpan AMorPM(string time)
@@ -54,6 +59,6 @@ namespace DogShowApp.Server.Controllers
             return span;
         }
 
-        */ 
+        */
     }
 }
