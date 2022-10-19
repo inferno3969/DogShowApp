@@ -80,9 +80,31 @@ namespace DogShowApp.Server.Controllers
         }
 
         [HttpPost]
-        public void Post(User users)
+        public void Post(List<Object?> properties)
         {
-            Users.Add(users);
+            User newUser = new User();
+            PropertyInfo[] prop = newUser.GetType().GetProperties();
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                if (properties[i] != null && properties[i].GetType() == typeof(JsonElement))
+                {
+                    if (prop[i].PropertyType == typeof(String))
+                    {
+                        prop[i].SetValue(newUser, properties[i].ToString());
+                    }
+                    else if (prop[i].PropertyType == typeof(Boolean))
+                    {
+                        prop[i].SetValue(newUser, Convert.ToBoolean(properties[i].ToString()));
+                    }
+                    else if (prop[i].PropertyType == typeof(Int32))
+                    {
+                        prop[i].SetValue(newUser, Convert.ToInt32(properties[i].ToString()));
+                    }
+                }
+            }
+
+            Users.Add(newUser);
         }
 
         [HttpDelete]
