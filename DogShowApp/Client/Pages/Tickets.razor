@@ -28,13 +28,13 @@
                                 <Field>
                                     <FieldLabel>Number of regular tickets:</FieldLabel>
                                     <Div Display="Display.Flex" Class="justify-content-center">
-                                            <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets." Min=0>
-                                                <Feedback>
-                                                    <ValidationNone>Please Enter Your Email. </ValidationNone>
-                                                    <ValidationSuccess>Email is good</ValidationSuccess>
-                                                    <ValidationError>Please Enter A Valid Email</ValidationError>
-                                                </Feedback>
-                                            </NumericEdit>
+                                        <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets." Min=1>
+                                            <Feedback>
+                                                <ValidationNone>Please Enter Your Email. </ValidationNone>
+                                                <ValidationSuccess>Email is good</ValidationSuccess>
+                                                <ValidationError>Please Enter A Valid Email</ValidationError>
+                                            </Feedback>
+                                        </NumericEdit>
                                     </Div>
 
                                 </Field>
@@ -50,7 +50,7 @@
                                 <Field>
                                     <FieldLabel>Number of season tickets:</FieldLabel>
                                     <Div Display="Display.Flex" Class="justify-content-center">
-                                        <NumericEdit TValue="int" @bind-Value="@numOfSeasonTickets" Placeholder="Enter number of tickets." Min=0>
+                                        <NumericEdit TValue="int" @bind-Value="@numOfSeasonTickets" Placeholder="Enter number of tickets." Min=1>
                                         </NumericEdit>
                                     </Div>
 
@@ -73,11 +73,15 @@
                         <JumbotronSubtitle>
                             This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
                         </JumbotronSubtitle>
-                        <Divider></Divider>
+                        <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
-                            Regular Tickets: @Login.user.numOfRegularTickets | Price: @ticket.regularTicketsPrice
-                            Season Tickets: @Login.user.numOfSeasonTickets | Price: @ticket.seasonTicketsPrice
+                            Regular Tickets: @Login.user.numOfRegularTickets | Price: @regularTicketPrice
                         </Paragraph>
+                        <Divider DividerType="DividerType.Solid" />
+                        <Paragraph>
+                            Season Tickets: @Login.user.numOfSeasonTickets | Price: @seasonTicketPrice
+                        </Paragraph>
+                        <Divider DividerType="DividerType.Solid" />
                     </Jumbotron>
                     <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
 
@@ -137,8 +141,8 @@
     int numOfRegularTickets;
     int numOfSeasonTickets;
 
-    decimal regularTicketPrice = 10.00m;
-    decimal seasonTicketPrice = 100.00m;
+    decimal regularTicketPrice;
+    decimal seasonTicketPrice;
     decimal finalPrice;
 
     private Modal modalRef;
@@ -152,10 +156,8 @@
     {
         Login.user.numOfRegularTickets = numOfRegularTickets;
         Login.user.numOfSeasonTickets = numOfSeasonTickets;
-        ticket.regularTicketsPrice = 0;
-        ticket.regularTicketsPrice = regularTicketPrice * numOfRegularTickets;
-        ticket.seasonTicketsPrice = 0;
-        ticket.seasonTicketsPrice = seasonTicketPrice * numOfSeasonTickets;
+        regularTicketPrice = ticket.regularTicketsPrice * numOfRegularTickets;
+        seasonTicketPrice = ticket.seasonTicketsPrice * numOfSeasonTickets;
         return modalRef.Hide();
     }
 
@@ -184,12 +186,14 @@
         if (selectedTab == "regularticket")
         {
             Login.user.numOfRegularTickets += numOfRegularTickets;
-            ticket.regularTicketsPrice *= numOfRegularTickets;
+            regularTicketPrice = ticket.regularTicketsPrice;
+            regularTicketPrice *= Login.user.numOfRegularTickets;
         }
         if (selectedTab == "seasonticket")
         {
             Login.user.numOfSeasonTickets += numOfSeasonTickets;
-            ticket.seasonTicketsPrice *= numOfSeasonTickets;
+            seasonTicketPrice = ticket.seasonTicketsPrice;
+            seasonTicketPrice *= Login.user.numOfSeasonTickets;
         }
     }
 
