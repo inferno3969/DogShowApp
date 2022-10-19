@@ -19,30 +19,24 @@ else
   
         
     
-        <DataGrid TItem="Bio"
-              Data="@bioList"
-              @bind-SelectedRow="@selectedBio"
-              Responsive>
-            <DataGridCommandColumn />
-            <DisplayTemplate>
+ <DataGrid TItem="Bio"Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Context="context">
+     <DataGridCommandColumn />
+            
+    <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" /> 
+    <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Bio: " />
+    <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name:" />
      
-    </DisplayTemplate>
-        <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" /> 
-        <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Bio: " />
-        <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name:" />
+    <DataGridColumn TItem="Bio" Field="@nameof(Bio.DogImageURL)" Caption="" >     <DisplayTemplate>
+
+            @{
+                Bio bio = context as Bio;
+                <img src="@bio.DogImageURL" />
+                }
+            </DisplayTemplate>
+      </DataGridColumn>
         
-      
         
-        
-        <Figure Size="FigureSize.Is256x256">
-            <FigureImage Source="@bio.DogImageURL" />
-            <FigureCaption>@nameof(Bio.TrainerName)</FigureCaption>
-        </Figure>
-        <Figure Size="FigureSize.Is256x256">
-            <FigureImage Source=Bio.DogImageURL />
-        </Figure>
-        
-        </DataGrid>
+    </DataGrid>
     <asp:Image ID=Bio.DogImageURL runat="server" />
 
 
