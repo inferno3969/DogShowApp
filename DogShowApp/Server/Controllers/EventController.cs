@@ -40,13 +40,11 @@ namespace DogShowApp.Server.Controllers
             Events.Add(_event);
         }
 
-        public TimeSpan AMorPM(string time)
+        [HttpPut]
+        public void Put(Tuple<Int32, Event> putStuff)
         {
-            DateTime dateTime = DateTime.ParseExact(time,
-                                    "hh:mm tt", CultureInfo.InvariantCulture);
-            TimeSpan span = dateTime.TimeOfDay;
-
-            return span;
+            Events.RemoveAt(putStuff.Item1);
+            Events.Insert(putStuff.Item1, putStuff.Item2);
         }
     }
 }
