@@ -1,7 +1,11 @@
 ﻿@page "/login"
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
+<<<<<<< Updated upstream
 @using Blazorise.LoadingIndicator
+@using System.Reflection
+=======
+>>>>>>> Stashed changes
 @inject HttpClient Http
 @inject NavigationManager navigationManager
 
@@ -50,9 +54,6 @@
                         Login
                     </Button>
                     <Button Color="Color.Secondary">Forgot Password</Button>
-                    <LoadingIndicator @ref="loadingIndicator">
-
-                    </LoadingIndicator>
                 </CardBody>
             </Card>
         </TabPanel>
@@ -152,16 +153,6 @@
 
 
 @code {
-    LoadingIndicator loadingIndicator;
-
-    async Task UpdateChart()
-    {
-        await loadingIndicator.Show();
-
-        await Task.Delay(3000); // Do work ...
-
-        await loadingIndicator.Hide();
-    }
     public static User user = new User();
 
     List<User>? userList;
@@ -179,7 +170,6 @@
     string confirmPassword;
     bool isAdmin;
     bool rememberMe;
-    bool isLoading;
 
     private Task OnSelectedTabChanged(string name)
     {
@@ -191,7 +181,6 @@
     async Task OnLoginClicked()
     {
         userList = await Http.GetFromJsonAsync<List<User>>($"User?username={username}&password={password}");
-        isLoading = true;
 
         if (isAdmin == false)
         {
@@ -218,7 +207,14 @@
         password = user.Password;
         username = user.Username;
 
-        HttpResponseMessage response = await Http.PostAsJsonAsync("User", user);
+        List<Object?> properties = new List<Object?>();
+
+        foreach (PropertyInfo prop in user.GetType().GetProperties())
+        {
+            properties.Add(prop.GetValue(user));
+        }
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync("User", properties);
 
         selectedTab = "login";
     }
