@@ -4,7 +4,7 @@
 
 <PageTitle>Biographies</PageTitle>
 
-<h1>Dog/Trainer Biographies</h1>
+<h1>Dog Biographies</h1>
 
 <p></p>
 
@@ -18,44 +18,34 @@ else
 {
   
         
-    
+<div style="font-size:2.5em;">    
  <DataGrid TItem="Bio"Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Context="context">
-     <DataGridCommandColumn />
-            
-    <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" /> 
-    <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Bio: " />
-    <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name:" />
-     
-    <DataGridColumn TItem="Bio" Field="@nameof(Bio.DogImageURL)" Caption="" >     <DisplayTemplate>
-
+ 
+    
+    <DataGridColumn TItem="Bio" Field="@nameof(Bio.DogImageURL)" Caption="" Width="50" >
+        <DisplayTemplate>
             @{
                 Bio bio = context as Bio;
-                <img src="@bio.DogImageURL" />
-                }
-            </DisplayTemplate>
-      </DataGridColumn>
-        
-        
+                            <img src="@bio.DogImageURL" 
+                            style="width:256px"/>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+            
+    <DataGridCommandColumn />
+
+    <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name" Width="1" /> 
+    <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Breed " Width="1" />
+    <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name" Width="1" />
+    <DataGridColumn Field="@nameof(Bio.TrainerImageURL)" Caption="Bio" Width="100" />
+
     </DataGrid>
-    <asp:Image ID=Bio.DogImageURL runat="server" />
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 }
 
 
 @code {
     Bio bio = new Bio();
-    public string yoko = "https://www.quotationof.com/images/eric-wareheim-6.jpg";
-    private string selectedSlide = "2";
     private List<Bio>? bioList;
     private Bio? selectedBio;
 
