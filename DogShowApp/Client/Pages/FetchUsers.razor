@@ -1,5 +1,6 @@
 ﻿@page "/fetchusers"
 @using DogShowApp.Shared.Data
+@using System.Reflection
 @inject HttpClient Http
 
 <PageTitle>Weather forecast</PageTitle>
@@ -15,19 +16,26 @@
 else
 {
     <DataGrid TItem="User"
-              Data="@userList"
-              @bind-SelectedRow="@selectedUser"
-              Responsive>
-        <DataGridCommandColumn />
-        <DataGridColumn Field="@nameof(User.FirstName)" Caption="First Name" Sortable="false" />
+          Data="@userList"
+          @bind-SelectedRow="@selectedUser"
+          RowRemoving="OnRowRemoving"
+          RowUpdated="OnRowUpdated"
+          Editable
+          Responsive>
+        <DataGridCommandColumn NewCommandAllowed="false">
+            <EditCommandTemplate>
+                <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+            </EditCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(User.FirstName)" Caption="First Name" Editable />
         <DataGridColumn Field="@nameof(User.LastName)" Caption="Last Name" Editable />
+        <DataGridColumn Field="@nameof(User.Username)" Caption="Username" Editable />
         <DataGridColumn Field="@nameof(User.Email)" Caption="Email" Editable />
- 
     </DataGrid>
 }
 
 
-@code{
+@code {
 
     private List<User>? userList;
     private User? selectedUser;
@@ -35,6 +43,26 @@ else
     protected override async Task OnInitializedAsync()
     {
         userList = await Http.GetFromJsonAsync<List<User>>("User");
+    }
+
+    private async void OnRowRemoving(CancellableRowChange<User> itemBeingRemoved)
+    {
+        int temp = userList!.IndexOf(itemBeingRemoved.Item);
+        await Http.DeleteAsync("User?item=" + temp);
+    }
+
+    private async void OnRowUpdated(SavedRowItem<User, Dictionary<string, object>> e)
+    {
+        int userIndex = userList!.IndexOf(e.Item);
+
+        List<Object?> properties = new List<Object?>();
+
+        foreach (PropertyInfo prop in e.Item.GetType().GetProperties())
+        {
+            properties.Add(prop.GetValue(e.Item));
+        }
+
+        await Http.PutAsJsonAsync("User", new Tuple<Int32, List<Object?>>(userIndex, properties));
     }
 
 }

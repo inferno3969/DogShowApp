@@ -1,0 +1,200 @@
+﻿@page "/tickets"
+@using DogShowApp.Shared.Data
+@using System.ComponentModel.DataAnnotations
+@using Blazorise.LoadingIndicator
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+
+<PageTitle>Tickets</PageTitle>
+
+<Steps @ref="stepsRef" @bind-SelectedStep="selectedStep" NavigationAllowed="NavigationAllowed">
+    <Items>
+        <Step Name="1">Ticket Type</Step>
+        <Step Name="2">Ticket</Step>
+        <Step Name="3">Step 3</Step>
+        <Step Name="4">Step 4</Step>
+    </Items>
+    <Content>
+        <StepPanel Name="1">
+            <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" Pills FullWidth>
+                <Items>
+                    <Tab Name="regularticket">Regular Ticket</Tab>
+                    <Tab Name="seasonticket">Season Ticket</Tab>
+                </Items>
+                <Content>
+                    <TabPanel Name="regularticket">
+                        <Card>
+                            <CardBody>
+                                <Field>
+                                    <FieldLabel>Number of regular tickets:</FieldLabel>
+                                    <Div Display="Display.Flex" Class="justify-content-center">
+                                        <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets." Min=1>
+                                            <Feedback>
+                                                <ValidationNone>Please Enter Your Email. </ValidationNone>
+                                                <ValidationSuccess>Email is good</ValidationSuccess>
+                                                <ValidationError>Please Enter A Valid Email</ValidationError>
+                                            </Feedback>
+                                        </NumericEdit>
+                                    </Div>
+
+                                </Field>
+                                <Button Color="Color.Primary" Clicked="@AddToCart">
+                                    Add To Cart
+                                </Button>
+                            </CardBody>
+                        </Card>
+                    </TabPanel>
+                    <TabPanel Name="seasonticket">
+                        <Card>
+                            <CardBody>
+                                <Field>
+                                    <FieldLabel>Number of season tickets:</FieldLabel>
+                                    <Div Display="Display.Flex" Class="justify-content-center">
+                                        <NumericEdit TValue="int" @bind-Value="@numOfSeasonTickets" Placeholder="Enter number of tickets." Min=1>
+                                        </NumericEdit>
+                                    </Div>
+
+                                </Field>
+                                <Button Color="Color.Primary" Clicked="@AddToCart">
+                                    Add To Cart
+                                </Button>
+                            </CardBody>
+                        </Card>
+                    </TabPanel>
+                </Content>
+            </Tabs>
+
+        </StepPanel>
+        <StepPanel Name="2">
+            <Card>
+                <CardBody>
+                    <Jumbotron Background="Background.Transparent" Margin="Margin.Is4.FromBottom">
+                        <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
+                        <JumbotronSubtitle>
+                            This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                        </JumbotronSubtitle>
+                        <Divider DividerType="DividerType.Solid" />
+                        <Paragraph>
+                            Regular Tickets: @Login.user.numOfRegularTickets | Price: @regularTicketPrice
+                        </Paragraph>
+                        <Divider DividerType="DividerType.Solid" />
+                        <Paragraph>
+                            Season Tickets: @Login.user.numOfSeasonTickets | Price: @seasonTicketPrice
+                        </Paragraph>
+                        <Divider DividerType="DividerType.Solid" />
+                        <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
+                    </Jumbotron>
+
+                    <Modal @ref="modalRef">
+                        <ModalContent Centered>
+                            <ModalHeader>
+                                <ModalTitle>Ticket Edit</ModalTitle>
+                                <CloseButton />
+                            </ModalHeader>
+                            <ModalBody>
+                                <Field>
+                                    <FieldLabel>Regular Tickets</FieldLabel>
+                                    <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets" />
+                                </Field>
+                                <Field>
+                                    <FieldLabel>Season Tickets</FieldLabel>
+                                    <NumericEdit TValue="int" @bind-Value="@numOfSeasonTickets" Placeholder="Enter number of season tickets" />
+                                </Field>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+                                <Button Color="Color.Primary" Clicked="@HideModal">Save Changes</Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
+                </CardBody>
+            </Card>
+        </StepPanel>
+        <StepPanel Name="3">
+            Step 3
+        </StepPanel>
+        <StepPanel Name="4">
+            Step 4
+        </StepPanel>
+    </Content>
+</Steps>
+
+<Div Display="Display.Flex" Class="justify-content-center">
+    <Button Color="Color.Secondary" Clicked="() => stepsRef.PreviousStep()">
+        Previous
+    </Button>
+    <Button Color="Color.Primary" Clicked="() => stepsRef.NextStep()">
+        Next
+    </Button>
+</Div>
+@code {
+
+    Ticket ticket = new Ticket();
+
+
+
+    private Steps stepsRef;
+    private string email;
+    private string selectedStep = "1";
+
+    string ticketType;
+    int numOfRegularTickets;
+    int numOfSeasonTickets;
+
+    decimal regularTicketPrice;
+    decimal seasonTicketPrice;
+    decimal finalPrice;
+
+    private Modal modalRef;
+
+    private Task ShowModal()
+    {
+        return modalRef.Show();
+    }
+
+    private Task HideModal()
+    {
+        Login.user.numOfRegularTickets = numOfRegularTickets;
+        Login.user.numOfSeasonTickets = numOfSeasonTickets;
+        regularTicketPrice = ticket.regularTicketsPrice * numOfRegularTickets;
+        seasonTicketPrice = ticket.seasonTicketsPrice * numOfSeasonTickets;
+        return modalRef.Hide();
+    }
+
+    private bool NavigationAllowed(StepNavigationContext context)
+    {
+        if (context.CurrentStepIndex == 1 && context.NextStepIndex > 2)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    string selectedTab = "regularticket";
+
+    private Task OnSelectedTabChanged(string name)
+    {
+
+        selectedTab = name;
+
+        return Task.CompletedTask;
+    }
+
+    private void AddToCart()
+    {
+        if (selectedTab == "regularticket")
+        {
+            Login.user.numOfRegularTickets += numOfRegularTickets;
+            regularTicketPrice = ticket.regularTicketsPrice;
+            regularTicketPrice *= Login.user.numOfRegularTickets;
+        }
+        if (selectedTab == "seasonticket")
+        {
+            Login.user.numOfSeasonTickets += numOfSeasonTickets;
+            seasonTicketPrice = ticket.seasonTicketsPrice;
+            seasonTicketPrice *= Login.user.numOfSeasonTickets;
+        }
+    }
+
+}

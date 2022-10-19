@@ -1,6 +1,7 @@
 ﻿@page "/login"
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
+@using Blazorise.LoadingIndicator
 @inject HttpClient Http
 @inject NavigationManager navigationManager
 
@@ -45,8 +46,13 @@
                     </Validations>
                 </CardBody>
                 <CardBody>
-                    <Button Color="Color.Primary" Clicked="@OnLoginClicked">Login</Button>
+                    <Button Color="Color.Primary" Clicked="@OnLoginClicked">
+                        Login
+                    </Button>
                     <Button Color="Color.Secondary">Forgot Password</Button>
+                    <LoadingIndicator @ref="loadingIndicator">
+
+                    </LoadingIndicator>
                 </CardBody>
             </Card>
         </TabPanel>
@@ -58,7 +64,7 @@
                     </CardTitle>
                 </CardBody>
                 <CardBody>
-                    <Validations Mode="ValidationMode.Auto" Model="@user">
+                    <Validations Mode="ValidationMode.Auto" Model="@user" ValidateOnLoad="false">
                         <Validation>
                             <Field Horizontal>
                                 <FieldLabel ColumnSize="ColumnSize.Is2">First Name</FieldLabel>
@@ -146,7 +152,16 @@
 
 
 @code {
+    LoadingIndicator loadingIndicator;
 
+    async Task UpdateChart()
+    {
+        await loadingIndicator.Show();
+
+        await Task.Delay(3000); // Do work ...
+
+        await loadingIndicator.Hide();
+    }
     public static User user = new User();
 
     List<User>? userList;
@@ -164,6 +179,7 @@
     string confirmPassword;
     bool isAdmin;
     bool rememberMe;
+    bool isLoading;
 
     private Task OnSelectedTabChanged(string name)
     {
@@ -175,7 +191,7 @@
     async Task OnLoginClicked()
     {
         userList = await Http.GetFromJsonAsync<List<User>>($"User?username={username}&password={password}");
-
+        isLoading = true;
 
         if (isAdmin == false)
         {
@@ -203,5 +219,7 @@
         username = user.Username;
 
         HttpResponseMessage response = await Http.PostAsJsonAsync("User", user);
+
+        selectedTab = "login";
     }
 }

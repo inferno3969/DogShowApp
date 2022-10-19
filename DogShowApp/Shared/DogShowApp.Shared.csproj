@@ -11,8 +11,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Data\" />
+    <None Remove="Blazorise.LoadingIndicator" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Blazorise.LoadingIndicator" Version="1.1.1" />
   </ItemGroup>
 </Project>

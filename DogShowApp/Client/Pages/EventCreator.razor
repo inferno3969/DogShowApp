@@ -26,7 +26,7 @@ else
     </Field>
 
     <DataGrid TItem="TempEvent" Data="@eventList" @bind-SelectedRow="@selectedEvent" Responsive Editable ShowPager CommandMode="DataGridCommandMode.ButtonRow"
-              EditMode="editMode" RowInserting="@DoNewRowPrep" RowInserted="@OnRowInserted">
+              EditMode="editMode" RowInserting="@DoNewRowPrep" RowInserted="@OnRowInserted" RowUpdated="@OnRowUpdated">
         <DataGridColumns>
             <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false">
                 <SaveCommandTemplate>
@@ -114,4 +114,16 @@ else
 
         HttpResponseMessage response = await Http.PostAsJsonAsync("Event", tempEvent);
     }
+
+    private async void OnRowUpdated(SavedRowItem<TempEvent, Dictionary<string, object>> e)
+    {
+        Event tempEvent = new Event();
+        tempEvent.Date = e.Item.Date.ToString();
+        tempEvent.Time = e.Item.Time.ToString();
+        tempEvent.EventName = e.Item.EventName;
+        tempEvent.EventDescription = e.Item.EventDescription;
+
+        int eventIndex = eventList!.IndexOf(e.Item);
+        await Http.PutAsJsonAsync("Event", new Tuple<Int32, Event>(eventIndex, tempEvent));
     }
+}
