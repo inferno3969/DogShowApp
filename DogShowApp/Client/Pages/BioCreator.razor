@@ -37,10 +37,10 @@ else
                 </CancelCommandTemplate>
             </DataGridCommandColumn>
             <DataGridColumn Field="@nameof(newBio.DogName)" Caption="Name of Dog" Sortable="true" Editable />
-            <DataGridColumn Field="@nameof(newBio.DogDescription)" Caption="Dog Info" Editable />
+            <DataGridColumn Field="@nameof(newBio.DogDescription)" Caption="Breed" Editable />
             <DataGridColumn Field="@nameof(newBio.TrainerName)" Caption="Trainer's Name'" Editable />
+            <DataGridColumn Field="@nameof(newBio.TrainerImageURL)" Caption="Comments" Editable />
             <DataGridColumn Field="@nameof(newBio.DogImageURL)" Caption="html link to dogs' picutre" Editable />
-            <DataGridColumn Field="@nameof(newBio.TrainerImageURL)" Caption="html link to trainers' picture" Editable />
         </DataGridColumns>
         <ButtonRowTemplate>
             <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
@@ -82,13 +82,13 @@ else
     private List<TempBio>? bioList = new List<TempBio>();
     private DataGridEditMode editMode = DataGridEditMode.Form;
 
-    /*
+    
     string? dogName;
     string? dogDescription;
     string? trainerName;
     string? dogImageURL;
     string? trainerImageURL;
-    */
+    
 
     protected override async Task OnInitializedAsync()
     {

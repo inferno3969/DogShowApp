@@ -1,5 +1,6 @@
 ﻿@page "/fetchbio"
 @using DogShowApp.Shared.Data
+@using System.Reflection
 @inject HttpClient Http
 
 <PageTitle>Biographies</PageTitle>
@@ -19,10 +20,15 @@ else
   
         
 <div style="font-size:2.5em;">    
- <DataGrid TItem="Bio"Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Context="context">
- 
-    
-    <DataGridColumn TItem="Bio" Field="@nameof(Bio.DogImageURL)" Caption="" Width="50" >
+ <DataGrid TItem="Bio"
+     Data="@bioList" 
+     @bind-SelectedRow="@selectedBio" 
+     RowRemoving="OnRowRemoving"
+     RowUpdated="OnRowUpdated"
+     Editable
+     Responsive 
+     Context="context">
+     <DataGridColumn TItem="Bio" Field="@nameof(Bio.DogImageURL)" Caption="" Width="50" >
         <DisplayTemplate>
             @{
                 Bio bio = context as Bio;
@@ -52,6 +58,26 @@ else
     protected override async Task OnInitializedAsync()
     {
         bioList = await Http.GetFromJsonAsync<List<Bio>>("Bio");
+    }
+
+    private async void OnRowRemoving(CancellableRowChange<Bio> itemBeingRemoved)
+    {
+        int temp = bioList!.IndexOf(itemBeingRemoved.Item);
+        await Http.DeleteAsync("Bio?item=" + temp);
+    }
+
+    private async void OnRowUpdated(SavedRowItem<Bio, Dictionary<string, object>> e)
+    {
+        int bioIndex = bioList!.IndexOf(e.Item);
+
+        List<Object?> properties = new List<Object?>();
+
+        foreach (PropertyInfo prop in e.Item.GetType().GetProperties())
+        {
+            properties.Add(prop.GetValue(e.Item));
+        }
+
+        await Http.PutAsJsonAsync("Bio", new Tuple<Int32, List<Object?>>(bioIndex, properties));
     }
 
 }

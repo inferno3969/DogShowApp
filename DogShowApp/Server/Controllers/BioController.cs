@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using DogShowApp.Shared.Data;
 using System.Globalization;
+using System.Reflection;
+using System.Text.Json;
 
 namespace DogShowApp.Server.Controllers
 {
@@ -42,28 +44,70 @@ namespace DogShowApp.Server.Controllers
             return Bios;
         }
 
-        [HttpPost]
-        public void Post(Bio _bio)
+        [HttpPut]
+        public void Put(Tuple<Int32, List<Object?>> properties)
         {
-            Bios.Add(_bio);
+            Bio newBio = new Bio();
+            PropertyInfo[] prop = newBio.GetType().GetProperties();
+
+            for (int i = 0; i < properties.Item2.Count; i++)
+            {
+                if (properties.Item2[i] != null && properties.Item2[i].GetType() == typeof(JsonElement))
+                {
+                    if (prop[i].PropertyType == typeof(String))
+                    {
+                        prop[i].SetValue(newBio, properties.Item2[i].ToString());
+                    }
+                    else if (prop[i].PropertyType == typeof(Boolean))
+                    {
+                        prop[i].SetValue(newBio, Convert.ToBoolean(properties.Item2[i].ToString()));
+                    }
+                    else if (prop[i].PropertyType == typeof(Int32))
+                    {
+                        prop[i].SetValue(newBio, Convert.ToInt32(properties.Item2[i].ToString()));
+                    }
+                }
+            }
+            Bios.RemoveAt(properties.Item1);
+            Bios.Insert(properties.Item1, newBio);
+        }
+
+
+        [HttpPost]
+        public void Post(List<Object?> properties)
+        {
+        
+            Bio newBio = new Bio();
+            PropertyInfo[] prop = newBio.GetType().GetProperties();
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                if (properties[i] != null && properties[i].GetType() == typeof(JsonElement))
+                {
+                    if (prop[i].PropertyType == typeof(String))
+                    {
+                        prop[i].SetValue(newBio, properties[i].ToString());
+                    }
+                    else if (prop[i].PropertyType == typeof(Boolean))
+                    {
+                        prop[i].SetValue(newBio, Convert.ToBoolean(properties[i].ToString()));
+                    }
+                    else if (prop[i].PropertyType == typeof(Int32))
+                    {
+                        prop[i].SetValue(newBio, Convert.ToInt32(properties[i].ToString()));
+                    }
+                }
+            }
+
+            Bios.Add(newBio);
         }
 
         [HttpDelete]
 
-        public void DeleteLast(Bio _bio) { Bios.Remove(_bio); }
-
-        public void Delete() { }
-        /*  We no need Datetimes in hya
-    
-        public TimeSpan AMorPM(string time)
+        public void Delete(string item)
         {
-            DateTime dateTime = DateTime.ParseExact(time,
-                                    "hh:mm tt", CultureInfo.InvariantCulture);
-            TimeSpan span = dateTime.TimeOfDay;
-
-            return span;
+            Bios.RemoveAt(Convert.ToInt32(item));   
         }
-
-        */
+   
     }
 }
