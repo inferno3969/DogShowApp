@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DogShowApp.Shared.Data;
+using DogShowApp.Shared;
 
 namespace DogShowApp.Server.Controllers
 {
@@ -46,10 +47,23 @@ namespace DogShowApp.Server.Controllers
             }
         }
 
+        [HttpPut]
+        public void Put(Tuple<Int32, User> putStuff)
+        {
+            Users.RemoveAt(putStuff.Item1);
+            Users.Insert(putStuff.Item1, putStuff.Item2);
+        }
+
         [HttpPost]
         public void Post(User users)
         {
             Users.Add(users);
+        }
+
+        [HttpDelete]
+        public void Delete(String item)
+        {
+            Users.RemoveAt(Convert.ToInt32(item));
         }
     }
 }

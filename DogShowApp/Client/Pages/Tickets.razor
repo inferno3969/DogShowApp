@@ -9,7 +9,7 @@
 
 <Steps @ref="stepsRef" @bind-SelectedStep="selectedStep" NavigationAllowed="NavigationAllowed">
     <Items>
-        <Step Name="1">Choose Ticket Type</Step>
+        <Step Name="1">Ticket Type</Step>
         <Step Name="2">Ticket</Step>
         <Step Name="3">Step 3</Step>
         <Step Name="4">Step 4</Step>
@@ -68,7 +68,7 @@
         <StepPanel Name="2">
             <Card>
                 <CardBody>
-                    <Jumbotron Background="Background.Light" Margin="Margin.Is4.FromBottom">
+                    <Jumbotron Background="Background.Transparent" Margin="Margin.Is4.FromBottom">
                         <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
                         <JumbotronSubtitle>
                             This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
@@ -82,8 +82,8 @@
                             Season Tickets: @Login.user.numOfSeasonTickets | Price: @seasonTicketPrice
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
+                        <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
                     </Jumbotron>
-                    <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
 
                     <Modal @ref="modalRef">
                         <ModalContent Centered>
