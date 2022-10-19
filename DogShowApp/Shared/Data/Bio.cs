@@ -24,5 +24,10 @@ namespace DogShowApp.Shared.Data
         }
 
         public Bio() { }
+
+        public string? GetDogImageURL()
+        {
+            return DogImageURL;
+        }
     }
 }

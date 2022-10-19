@@ -1,12 +1,14 @@
 ﻿@page "/fetchbio"
 @using DogShowApp.Shared.Data
 @inject HttpClient Http
-@Modal // read asp.net modal image crap
+
 <PageTitle>Biographies</PageTitle>
 
 <h1>Dog/Trainer Biographies</h1>
 
 <p></p>
+
+
 
 @if (bioList == null)
 {
@@ -14,36 +16,52 @@
 }
 else
 {
+  
+        
+    
         <DataGrid TItem="Bio"
               Data="@bioList"
               @bind-SelectedRow="@selectedBio"
               Responsive>
             <DataGridCommandColumn />
             <DisplayTemplate>
-        @{
-            var myModel = ""+ nameof(Bio.DogImageURL);
-            <img src="@myModel"/>
-           // <img src="@myModel.Picture"/>
-        }
+     
     </DisplayTemplate>
-        <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" />
+        <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name:'" Sortable="false" /> 
         <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Bio: " />
         <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name:" />
+        
+      
+        
+        
         <Figure Size="FigureSize.Is256x256">
-            <FigureImage Source="@nameof(Bio.TrainerImageURL)" />
+            <FigureImage Source="@bio.DogImageURL" />
+            <FigureCaption>@nameof(Bio.TrainerName)</FigureCaption>
         </Figure>
         <Figure Size="FigureSize.Is256x256">
             <FigureImage Source=Bio.DogImageURL />
         </Figure>
-        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.quotationof.com%2Fimages%2Feric-wareheim-6.jpg&f=1&nofb=1&ipt=73a84193d837ca0ee1b953cfb567e19687b46a9bfbbb999b23173dec7b193345&ipo=images" alt="alternatetext">
-        <img src="https://www.quotationof.com/images/eric-wareheim-6.jpg" alt="alth">
-        <img src="@nameof(Bio.TrainerImageURL)" alt="poop">
+        
         </DataGrid>
+    <asp:Image ID=Bio.DogImageURL runat="server" />
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
 @code {
-
+    Bio bio = new Bio();
+    public string yoko = "https://www.quotationof.com/images/eric-wareheim-6.jpg";
+    private string selectedSlide = "2";
     private List<Bio>? bioList;
     private Bio? selectedBio;
 
