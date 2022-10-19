@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.10" />
+    <PackageReference Include="Blazorise.LoadingIndicator" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,4 +17,7 @@
   </ItemGroup>
 
 
+  <ItemGroup>
+    <None Remove="Blazorise.LoadingIndicator" />
+  </ItemGroup>
 </Project>

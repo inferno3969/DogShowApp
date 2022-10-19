@@ -2,8 +2,9 @@
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
+@inject NavigationManager navigationManager
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Login</PageTitle>
 
 <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" Pills FullWidth>
     <Items>
@@ -22,8 +23,8 @@
                     <Validations @ref="@loginValidationsRef" Mode="ValidationMode.Manual" ValidateOnLoad="false">
                         <Validation Validator="ValidationRule.IsEmail">
                             <Field>
-                                <FieldLabel>Email</FieldLabel>
-                                <TextEdit @bind-Text="@email" Placeholder="Enter email...">
+                                <FieldLabel>Username</FieldLabel>
+                                <TextEdit @bind-Text="@username" Placeholder="Enter username...">
                                     <Feedback>
                                         <ValidationNone>Please Enter Your Email. </ValidationNone>
                                         <ValidationSuccess>Email is good</ValidationSuccess>
@@ -84,6 +85,18 @@
                         </Validation>
                         <Validation>
                             <Field Horizontal>
+                                <FieldLabel ColumnSize="ColumnSize.Is2">Username</FieldLabel>
+                                <FieldBody ColumnSize="ColumnSize.Is10">
+                                    <TextEdit Placeholder="Enter username" @bind-Text="@user.Username">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </TextEdit>
+                                </FieldBody>
+                            </Field>
+                        </Validation>
+                        <Validation>
+                            <Field Horizontal>
                                 <FieldLabel ColumnSize="ColumnSize.Is2">Email</FieldLabel>
                                 <FieldBody ColumnSize="ColumnSize.Is10">
                                     <TextEdit Placeholder="Enter email" @bind-Text="@user.Email">
@@ -134,7 +147,7 @@
 
 @code {
 
-    User user = new User();
+    public static User user = new User();
 
     List<User>? userList;
 
@@ -146,8 +159,10 @@
     string firstName;
     string lastName;
     string email;
+    string username;
     string password;
     string confirmPassword;
+    bool isAdmin;
     bool rememberMe;
 
     private Task OnSelectedTabChanged(string name)
@@ -159,12 +174,24 @@
 
     async Task OnLoginClicked()
     {
-        if (await loginValidationsRef.ValidateAll())
-        {
-            // do the real login here
+        userList = await Http.GetFromJsonAsync<List<User>>($"User?username={username}&password={password}");
 
-            await loginValidationsRef.ClearAll();
+
+        if (isAdmin == false)
+        {
+            user.isLoggedIn = true;
+            navigationManager.NavigateTo("/");
         }
+        if (username == "bigchungusadmin420" && password == "admin420")
+        {
+            user.IsAdmin = true;
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+
+        }
+
     }
 
     async Task OnRegisterClicked()
@@ -173,7 +200,10 @@
         lastName = user.LastName;
         email = user.Email;
         password = user.Password;
+        username = user.Username;
 
         HttpResponseMessage response = await Http.PostAsJsonAsync("User", user);
+
+        selectedTab = "login";
     }
 }

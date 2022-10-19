@@ -4,36 +4,39 @@ namespace DogShowApp.Shared.Data
 {
     public class User
     {
-        [Required]
-        [StringLength(10, ErrorMessage = "Name is too long.")]
+        [Required(ErrorMessage = "First name is required.")]
+        [StringLength(20, ErrorMessage = "First name must be between 1 and 20 characters.", MinimumLength = 1)]
         public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(10, ErrorMessage = "Name is too long.")]
+        [Required(ErrorMessage = "Last name is required.")]
+        [StringLength(20, ErrorMessage = "Last name must be between 1 and 20 characters.", MinimumLength = 1)]
         public string LastName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email address is required.")]
         [EmailAddress(ErrorMessage = "Invalid email.")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(10, ErrorMessage = "Name is too long.")]
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(20, ErrorMessage = "Username must be between 5 and 20 characters.", MinimumLength = 5)]
         public string Username { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
-        [StringLength(8, ErrorMessage = "Must be between 5 and 8 characters", MinimumLength = 5)]
+        [Required(ErrorMessage = "Password is required.")]
+        [MinLength(8, ErrorMessage = "Password must at least be 8 characters.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Confirm Password is required")]
-        [StringLength(8, ErrorMessage = "Must be between 5 and 8 characters", MinimumLength = 5)]
+        [Required(ErrorMessage = "Confirm password is required.")]
         [DataType(DataType.Password)]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string? ConfirmPassword { get; set; }
 
         public bool isLoggedIn { get; set; } = false;
 
         public bool IsAdmin { get; set; } = false;
+
+        public int numOfRegularTickets { get; set; } = 0;
+
+        public int numOfSeasonTickets { get; set; } = 0;
 
         public User(string firstName, string lastName, string username, string email, string password, bool isAdmin)
         {

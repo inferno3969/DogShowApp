@@ -14,16 +14,21 @@
 }
 else
 {
-    <DataGrid TItem="User"
-              Data="@userList"
-              @bind-SelectedRow="@selectedUser"
-              Responsive>
-        <DataGridCommandColumn />
-        <DataGridColumn Field="@nameof(User.FirstName)" Caption="First Name" Sortable="false" />
-        <DataGridColumn Field="@nameof(User.LastName)" Caption="Last Name" Editable />
-        <DataGridColumn Field="@nameof(User.Email)" Caption="Email" Editable />
- 
-    </DataGrid>
+<DataGrid TItem="User"
+          Data="@userList"
+          @bind-SelectedRow="@selectedUser"
+          Editable
+          Responsive>
+    <DataGridCommandColumn NewCommandAllowed="false">
+        <EditCommandTemplate>
+            <Button Color="Color.Primary" Clicked="@context.Clicked">Edit</Button>
+        </EditCommandTemplate>
+    </DataGridCommandColumn>>
+    <DataGridColumn Field="@nameof(User.FirstName)" Caption="First Name" Editable />
+    <DataGridColumn Field="@nameof(User.LastName)" Caption="Last Name" Editable />
+    <DataGridColumn Field="@nameof(User.Username)" Caption="Username" Editable />
+    <DataGridColumn Field="@nameof(User.Email)" Caption="Email" Editable />
+</DataGrid>
 }
 
 

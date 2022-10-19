@@ -1,0 +1,123 @@
+﻿@page "/tickets"
+@using DogShowApp.Shared.Data
+@using System.ComponentModel.DataAnnotations
+@using Blazorise.LoadingIndicator
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+
+<PageTitle>Tickets</PageTitle>
+
+<Steps @ref="stepsRef" @bind-SelectedStep="selectedStep" NavigationAllowed="NavigationAllowed">
+    <Items>
+        <Step Name="1">Choose Ticket Type</Step>
+        <Step Name="2">Ticket</Step>
+        <Step Name="3">Step 3</Step>
+        <Step Name="4">Step 4</Step>
+    </Items>
+    <Content>
+        <StepPanel Name="1">
+            <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" Pills FullWidth>
+                <Items>
+                    <Tab Name="regularticket">Regular Ticket</Tab>
+                    <Tab Name="seasonticket">Season Ticket</Tab>
+                </Items>
+                <Content>
+                    <TabPanel Name="regularticket">
+                        <Card>
+                            <CardBody>
+                                <Field>
+
+                                    <FieldLabel>Number of regular tickets:</FieldLabel>
+                                    <Div Display="Display.Flex" Class="justify-content-center">
+                                        <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets." Min="0">
+                                            <Feedback>
+                                                <ValidationNone>Please Enter Your Email. </ValidationNone>
+                                                <ValidationSuccess>Email is good</ValidationSuccess>
+                                                <ValidationError>Please Enter A Valid Email</ValidationError>
+                                            </Feedback>
+                                        </NumericEdit>
+                                    </Div>
+
+                                </Field>
+                                <Button Color="Color.Primary" Clicked="@AddToCart">
+                                    Add To Cart
+                                </Button>
+                            </CardBody>
+                        </Card>
+
+
+                    </TabPanel>
+                    <TabPanel Name="seasonticket">
+                        Content for profile.
+                    </TabPanel>
+                </Content>
+            </Tabs>
+
+        </StepPanel>
+        <StepPanel Name="2">
+            <Alert Color="Color.Success" Visible>
+                <AlertMessage>Your tickets have been added!</AlertMessage>
+                <AlertDescription>Number of regular tickets: @Login.user.numOfRegularTickets</AlertDescription>
+                <AlertDescription>Number of regular tickets: @Login.user.numOfRegularTickets</AlertDescription>
+            </Alert>
+        </StepPanel>
+        <StepPanel Name="3">
+            Step 3
+        </StepPanel>
+        <StepPanel Name="4">
+            Step 4
+        </StepPanel>
+    </Content>
+</Steps>
+<Div Display="Display.Flex" Class="justify-content-center">
+    <Button Color="Color.Secondary" Clicked="() => stepsRef.PreviousStep()">
+        Previous
+    </Button>
+    <Button Color="Color.Primary" Clicked="() => stepsRef.NextStep()">
+        Next
+    </Button>
+</Div>
+@code {
+
+    Ticket ticket = new Ticket();
+    private Steps stepsRef;
+    private string email;
+    private string selectedStep = "1";
+
+    string ticketType;
+    int numOfRegularTickets;
+    int numOfSeasonTickets;
+
+    private bool NavigationAllowed(StepNavigationContext context)
+    {
+        if (context.CurrentStepIndex == 1 && context.NextStepIndex > 2)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    string selectedTab = "regularticket";
+
+    private Task OnSelectedTabChanged(string name)
+    {
+
+        selectedTab = name;
+
+        return Task.CompletedTask;
+    }
+
+    private void AddToCart()
+    {
+        if (selectedTab == "regularticket")
+        {
+            Login.user.numOfRegularTickets = numOfRegularTickets;
+        }
+        if (selectedTab == "seasonticket")
+        {
+            Login.user.numOfSeasonTickets = numOfSeasonTickets;
+        }
+    }
+
+}
