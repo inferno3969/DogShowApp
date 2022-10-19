@@ -9,26 +9,55 @@
 
 <Steps @ref="stepsRef" @bind-SelectedStep="selectedStep" NavigationAllowed="NavigationAllowed">
     <Items>
-        <Step Name="1">Ticket Type</Step>
-        <Step Name="2">Ticket</Step>
-        <Step Name="3">Step 3</Step>
-        <Step Name="4">Step 4</Step>
+        <Step Name="1">
+            <Marker>
+                <Icon Name="IconName.TicketAlt" />
+            </Marker>
+            <Caption>
+                Tickets
+            </Caption>
+        </Step>
+        <Step Name="2">
+            <Marker>
+                <Icon Name="IconName.Pen" />
+            </Marker>
+            <Caption>
+                Review
+            </Caption>
+        </Step>
+        <Step Name="3">
+            <Marker>
+                <Icon Name="IconName.ShoppingCart" />
+            </Marker>
+            <Caption>
+                Checkout
+            </Caption>
+        </Step>
+        <Step Name="4">
+            <Marker>
+                <Icon Name="IconName.Flag" />
+            </Marker>
+            <Caption>
+                Finish
+            </Caption>
+        </Step>
     </Items>
     <Content>
         <StepPanel Name="1">
             <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" Pills FullWidth>
                 <Items>
-                    <Tab Name="regularticket">Regular Ticket</Tab>
+                    <Tab Name="eventticket">Event Ticket</Tab>
                     <Tab Name="seasonticket">Season Ticket</Tab>
                 </Items>
                 <Content>
-                    <TabPanel Name="regularticket">
+                    <TabPanel Name="eventticket">
                         <Card>
                             <CardBody>
                                 <Field>
-                                    <FieldLabel>Number of regular tickets:</FieldLabel>
+                                    <FieldLabel>Enter in the number of event tickets you would like to purchase.</FieldLabel>
+                                    <FieldLabel>Event tickets are for one event per one event ticket.</FieldLabel>
                                     <Div Display="Display.Flex" Class="justify-content-center">
-                                        <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets." Min=1>
+                                        <NumericEdit TValue="int" @bind-Value="@numOfEventTickets" Placeholder="Enter number of tickets." Min=1>
                                             <Feedback>
                                                 <ValidationNone>Please Enter Your Email. </ValidationNone>
                                                 <ValidationSuccess>Email is good</ValidationSuccess>
@@ -48,7 +77,8 @@
                         <Card>
                             <CardBody>
                                 <Field>
-                                    <FieldLabel>Number of season tickets:</FieldLabel>
+                                    <FieldLabel>Enter in the number of season tickets you would like to purchase.</FieldLabel>
+                                    <FieldLabel>Season tickets are for the whole season per one season ticket.</FieldLabel>
                                     <Div Display="Display.Flex" Class="justify-content-center">
                                         <NumericEdit TValue="int" @bind-Value="@numOfSeasonTickets" Placeholder="Enter number of tickets." Min=1>
                                         </NumericEdit>
@@ -69,13 +99,15 @@
             <Card>
                 <CardBody>
                     <Jumbotron Background="Background.Transparent" Margin="Margin.Is4.FromBottom">
-                        <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
+                        <JumbotronTitle Size="JumbotronTitleSize.Is4">Order Review</JumbotronTitle>
                         <JumbotronSubtitle>
-                            This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                            Please review your order. If you want to edit the amount of each ticket type, press the "Edit Tickets" button.
+                            If you want to cancel your order, press the "Cancel Order" button. If you want to proceed to checkout,
+                            press the "Checkout" button.
                         </JumbotronSubtitle>
                         <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
-                            Regular Tickets: @Login.user.numOfRegularTickets | Price: @regularTicketPrice
+                            Regular Tickets: @Login.user.numOfEventTickets | Price: @eventTicketPrice
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
@@ -83,6 +115,8 @@
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
                         <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
+                        <Button Color="Color.Danger" Clicked="@CancelOrder">Cancel Order</Button>
+                        <Button Color="Color.Success" Clicked="@Checkout">Checkout</Button>
                     </Jumbotron>
 
                     <Modal @ref="modalRef">
@@ -94,7 +128,7 @@
                             <ModalBody>
                                 <Field>
                                     <FieldLabel>Regular Tickets</FieldLabel>
-                                    <NumericEdit TValue="int" @bind-Value="@numOfRegularTickets" Placeholder="Enter number of tickets" />
+                                    <NumericEdit TValue="int" @bind-Value="@numOfEventTickets" Placeholder="Enter number of tickets" />
                                 </Field>
                                 <Field>
                                     <FieldLabel>Season Tickets</FieldLabel>
@@ -111,7 +145,71 @@
             </Card>
         </StepPanel>
         <StepPanel Name="3">
-            Step 3
+            <Jumbotron Background="Background.Light" Margin="Margin.Is4.FromBottom">
+                <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
+                <JumbotronSubtitle>
+                    This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                </JumbotronSubtitle>
+                <Divider></Divider>
+                <Paragraph>
+                    <Div Display="Display.Flex" Class="justify-content-left">
+                        <Field>
+                            <FieldLabel>Full Name</FieldLabel>
+                            <TextEdit Placeholder="Big M. Chungus" /> />
+                        </Field>
+                    </Div>
+                    <Div Display="Display.Flex" Class="justify-content-left">
+                        <Field>
+                            <FieldLabel>Email</FieldLabel>
+                            <Validation Validator="ValidationRule.IsEmail">
+                                <TextEdit Placeholder="bigchungus42069@gmail.com">
+                                    <Feedback>
+                                        <ValidationError>Not a valid email!</ValidationError>
+                                    </Feedback>
+                                </TextEdit>
+                            </Validation>
+                        </Field>
+                    </Div>
+                    <Div Display="Display.Flex" Class="justify-content-left">
+                        <Field>
+                            <FieldLabel>Address</FieldLabel>
+                            <Validation Validator="ValidationRule.IsNotEmpty">
+                                <TextEdit Placeholder="123 Big Chungus Ln.">
+                                    <Feedback>
+                                        <ValidationError>Can't be empty!</ValidationError>
+                                    </Feedback>
+                                </TextEdit>
+                            </Validation>
+                        </Field>
+                    </Div>
+                    <Div Display="Display.Flex" Class="justify-content-left">
+                        <Field>
+                            <FieldLabel>City</FieldLabel>
+                            <Validation Validator="ValidationRule.IsNotEmpty">
+                                <TextEdit Placeholder="New York">
+                                    <Feedback>
+                                        <ValidationError>Can't be empty!</ValidationError>
+                                    </Feedback>
+                                </TextEdit>
+                            </Validation>
+                        </Field>
+                    </Div>
+                    <Div Display="Display.Flex" Class="justify-content-left">
+                        <Field>
+                            <FieldLabel>State</FieldLabel>
+                            <Validation Validator="ValidationRule.IsUppercase">
+                                <InputMask Mask="aa">
+                                    <Feedback>
+                                        <ValidationError>Can't be empty!</ValidationError>
+                                    </Feedback>
+                                </InputMask>
+                            </Validation>
+                        </Field>
+                    </Div>
+
+
+                </Paragraph>
+            </Jumbotron>
         </StepPanel>
         <StepPanel Name="4">
             Step 4
@@ -138,13 +236,15 @@
     private string selectedStep = "1";
 
     string ticketType;
-    int numOfRegularTickets;
+    int numOfEventTickets;
     int numOfSeasonTickets;
 
-    decimal regularTicketPrice;
+    decimal eventTicketPrice;
     decimal seasonTicketPrice;
     decimal finalPrice;
 
+
+    string creditCardNumber;
     private Modal modalRef;
 
     private Task ShowModal()
@@ -154,9 +254,9 @@
 
     private Task HideModal()
     {
-        Login.user.numOfRegularTickets = numOfRegularTickets;
+        Login.user.numOfEventTickets = numOfEventTickets;
         Login.user.numOfSeasonTickets = numOfSeasonTickets;
-        regularTicketPrice = ticket.regularTicketsPrice * numOfRegularTickets;
+        numOfEventTickets = ticket.numOfEventTickets * numOfEventTickets;
         seasonTicketPrice = ticket.seasonTicketsPrice * numOfSeasonTickets;
         return modalRef.Hide();
     }
@@ -171,7 +271,7 @@
         return true;
     }
 
-    string selectedTab = "regularticket";
+    string selectedTab = "eventticket";
 
     private Task OnSelectedTabChanged(string name)
     {
@@ -183,11 +283,11 @@
 
     private void AddToCart()
     {
-        if (selectedTab == "regularticket")
+        if (selectedTab == "eventticket")
         {
-            Login.user.numOfRegularTickets += numOfRegularTickets;
-            regularTicketPrice = ticket.regularTicketsPrice;
-            regularTicketPrice *= Login.user.numOfRegularTickets;
+            Login.user.numOfEventTickets += numOfEventTickets;
+            eventTicketPrice = ticket.eventTicketsPrice;
+            eventTicketPrice *= Login.user.numOfEventTickets;
         }
         if (selectedTab == "seasonticket")
         {
@@ -195,6 +295,18 @@
             seasonTicketPrice = ticket.seasonTicketsPrice;
             seasonTicketPrice *= Login.user.numOfSeasonTickets;
         }
+    }
+
+    private void CancelOrder()
+    {
+        Login.user.numOfEventTickets = 0;
+        Login.user.numOfSeasonTickets = 0;
+        navigationManager.NavigateTo("/");
+    }
+
+    private void Checkout()
+    {
+        selectedStep = "3";
     }
 
 }
