@@ -2,6 +2,7 @@
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
 @using Blazorise.LoadingIndicator
+@using System.Reflection
 @inject HttpClient Http
 @inject NavigationManager navigationManager
 
@@ -218,7 +219,14 @@
         password = user.Password;
         username = user.Username;
 
-        HttpResponseMessage response = await Http.PostAsJsonAsync("User", user);
+        List<Object?> properties = new List<Object?>();
+
+        foreach (PropertyInfo prop in user.GetType().GetProperties())
+        {
+            properties.Add(prop.GetValue(user));
+        }
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync("User", properties);
 
         selectedTab = "login";
     }
