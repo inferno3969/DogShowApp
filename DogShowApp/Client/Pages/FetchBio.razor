@@ -45,13 +45,35 @@ else
 
 
 @code {
-    Bio bio = new Bio();
-    private List<Bio>? bioList;
+
     private Bio? selectedBio;
+    private List<Bio>? bioList = new List<Bio>();
+    private DataGridEditMode editMode = DataGridEditMode.Form;
 
     protected override async Task OnInitializedAsync()
     {
-        bioList = await Http.GetFromJsonAsync<List<Bio>>("Bio");
+        List<Bio>? _bioList = await Http.GetFromJsonAsync<List<Bio>>("Bio");
+
+        if (_bioList != null)
+        {
+            foreach (Bio _bio in _bioList)
+            {
+                bioList.Add(new Bio());
+                bioList.Last().DogName = _bio.DogName;
+                bioList.Last().DogDescription = _bio.DogDescription;
+                bioList.Last().TrainerName = _bio.TrainerName;
+                bioList.Last().DogImageURL = _bio.DogImageURL;
+                bioList.Last().TrainerImageURL = _bio.TrainerImageURL;
+            }
+        }
     }
 
+
+
+
+    /*
+    Bio bio = new Bio();
+    private List<Bio>? bioList;
+    private Bio? selectedBio;
+    */
 }

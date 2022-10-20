@@ -25,7 +25,7 @@ else
         </FieldBody>
     </Field>
 
-    <DataGrid TItem="TempBio" Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Editable ShowPager CommandMode="DataGridCommandMode.ButtonRow"
+    <DataGrid TItem="Bio" Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Editable ShowPager CommandMode="DataGridCommandMode.ButtonRow"
           EditMode="editMode" RowInserting="@DoNewRowPrep" RowInserted="@OnRowInserted">
         <DataGridColumns>
             <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false">
@@ -36,11 +36,12 @@ else
                     <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
                 </CancelCommandTemplate>
             </DataGridCommandColumn>
-            <DataGridColumn Field="@nameof(newBio.DogName)" Caption="Name of Dog" Sortable="true" Editable />
-            <DataGridColumn Field="@nameof(newBio.DogDescription)" Caption="Dog Info" Editable />
-            <DataGridColumn Field="@nameof(newBio.TrainerName)" Caption="Trainer's Name'" Editable />
-            <DataGridColumn Field="@nameof(newBio.DogImageURL)" Caption="html link to dogs' picutre" Editable />
-            <DataGridColumn Field="@nameof(newBio.TrainerImageURL)" Caption="html link to trainers' picture" Editable />
+            <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Name of Dog" Sortable="true" Editable />
+            <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Breed" Editable />
+            <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name'" Editable />
+            <DataGridColumn Field="@nameof(Bio.TrainerImageURL)" Caption="Comments" Editable />
+            <DataGridColumn Field="@nameof(Bio.DogImageURL)" Caption="html link to dogs' picture" Editable />
+
         </DataGridColumns>
         <ButtonRowTemplate>
             <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
@@ -52,6 +53,7 @@ else
 }
 
 @code {
+    /*
     public class TempBio
     {
         public string? DogName { get; set; }
@@ -76,10 +78,11 @@ else
 
         public TempBio() { }
     }
-    TempBio newBio = new TempBio();
+    */
+    Bio newBio = new Bio();
 
-    private TempBio? selectedBio;
-    private List<TempBio>? bioList = new List<TempBio>();
+    private Bio? selectedBio;
+    private List<Bio>? bioList = new List<Bio>();
     private DataGridEditMode editMode = DataGridEditMode.Form;
 
     /*
@@ -98,7 +101,7 @@ else
         {
             foreach (Bio _bio in _bioList)
             {
-                bioList.Add(new TempBio());
+                bioList.Add(new Bio());
                 bioList.Last().DogName = _bio.DogName;
                 bioList.Last().DogDescription = _bio.DogDescription;
                 bioList.Last().TrainerName = _bio.TrainerName;
@@ -108,12 +111,12 @@ else
         }
     }
 
-    public void DoNewRowPrep(CancellableRowChange<TempBio, Dictionary<String, Object>> e)
+    public void DoNewRowPrep(CancellableRowChange<Bio, Dictionary<String, Object>> e)
     {
 
     }
 
-    private async void OnRowInserted(SavedRowItem<TempBio, Dictionary<string, object>> e)
+    private async void OnRowInserted(SavedRowItem<Bio, Dictionary<string, object>> e)
     {
         Bio tempBio = new Bio();
         tempBio.DogName = e.Item.DogName;
