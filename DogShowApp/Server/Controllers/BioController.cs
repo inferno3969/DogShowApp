@@ -17,12 +17,6 @@ namespace DogShowApp.Server.Controllers
 
         private readonly ILogger<BioController> _logger;
 
-
-        // Don't think I will need any static bruh
-        //private static DateOnly dateOnly = new DateOnly(2020, 04, 20);
-
-        //private static TimeOnly timeOnly = new TimeOnly(10, 30);
-
         public BioController(ILogger<BioController> logger)
         {
             _logger = logger;
@@ -52,37 +46,18 @@ namespace DogShowApp.Server.Controllers
         }
 
         [HttpPut]
-        public void Put(Tuple<Int32, List<Object?>> properties)
+        public void Put(string? item)
         { 
             Bio newBio = new Bio();
-            PropertyInfo[] prop = newBio.GetType().GetProperties();
-
-
-            for (int i = 0; i < properties.Item2.Count; i++)
-            {
-                if (properties.Item2[i] != null && properties.Item2[i].GetType() == typeof(JsonElement))
-                {
-                    if (prop[i].PropertyType == typeof(String))
-                    {
-                        prop[i].SetValue(newBio, properties.Item2[i].ToString());
-                    }
-                    else if (prop[i].PropertyType == typeof(Boolean))
-                    {
-                        prop[i].SetValue(newBio, Convert.ToBoolean(properties.Item2[i].ToString()));
-                    }
-                    else if (prop[i].PropertyType == typeof(Int32))
-                    {
-                        prop[i].SetValue(newBio, Convert.ToInt32(properties.Item2[i].ToString()));
-                    }
-                }
-            }
-            Bios.RemoveAt(properties.Item1);
-            Bios.Insert(properties.Item1, newBio);
+            int subscript = Convert.ToInt32(item); 
+            
+            Bios[subscript] = newBio;
         }
         [HttpDelete]
-        public void Delete(String item)
+        public void Delete(string? item)
         {
-            Bios.RemoveAt(Convert.ToInt32(item));
+       
+        Bios.RemoveAt(Convert.ToInt32(item));
         }
     }
 }
