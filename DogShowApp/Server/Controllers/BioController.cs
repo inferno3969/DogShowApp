@@ -39,7 +39,7 @@ namespace DogShowApp.Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Bio> Get()
+        public Bios Get()
         {
             return Bios;
         }
@@ -103,11 +103,12 @@ namespace DogShowApp.Server.Controllers
         }
 
         [HttpDelete]
-
+        public void Delete()
+        /*
         public void Delete(string item)
         {
             Bios.RemoveAt(Convert.ToInt32(item));   
         }
-   
+        */
     }
 }
