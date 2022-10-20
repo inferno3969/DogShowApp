@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DogShowApp.Shared.Data;
 using DogShowApp.Shared;
-using UserNS = DogShowApp.Shared.Data;
 using System.Text.Json;
 using System.Reflection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +12,7 @@ namespace DogShowApp.Server.Controllers
     public class UserController : ControllerBase
     {
         //MUST be static to persist
-        private static List<UserNS.User> Users { get; set; } = new List<UserNS.User>();
+        private static List<User> Users { get; set; } = new List<User>();
 
         private readonly ILogger<UserController> _logger;
 
@@ -23,14 +22,14 @@ namespace DogShowApp.Server.Controllers
 
             if (Users.Count == 0)
             {
-                Users.Add(new UserNS.User("Jim", "Bob", "jimbo123", "jimbob@jimbob.com", "jimbob123", false));
-                Users.Add(new UserNS.User("Amanda", "Jones", "amandajones22", "amandajones@amandajones.com", "amandajones123", false));
-                Users.Add(new UserNS.User("Admin", "Admin", "bigchungusadmin420", "admin@admin.com", "admin420", true));
+                Users.Add(new User("Jim", "Bob", "jimbo123", "jimbob@jimbob.com", "jimbob123", false));
+                Users.Add(new User("Amanda", "Jones", "amandajones22", "amandajones@amandajones.com", "amandajones123", false));
+                Users.Add(new User("Admin", "Admin", "bigchungusadmin420", "admin@admin.com", "admin420", true));
             }
         }
 
         [HttpGet]
-        public IEnumerable<UserNS.User> Get(string? username, string? password)
+        public IEnumerable<User> Get(string? username, string? password)
         {
             if (username == null && password == null)
             {
