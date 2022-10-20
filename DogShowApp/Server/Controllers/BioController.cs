@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DogShowApp.Shared.Data;
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace DogShowApp.Server.Controllers
 {
@@ -48,22 +49,17 @@ namespace DogShowApp.Server.Controllers
             Bios.Add(_bio);
         }
 
-        [HttpDelete]
-
-        public void DeleteLast(Bio _bio) { Bios.Remove(_bio); }
-
-        public void Delete() { }
-        /*  We no need Datetimes in hya
-    
-        public TimeSpan AMorPM(string time)
+        [HttpPut]
+        public void Put(Tuple<Int32, Event> putStuff)
         {
-            DateTime dateTime = DateTime.ParseExact(time,
-                                    "hh:mm tt", CultureInfo.InvariantCulture);
-            TimeSpan span = dateTime.TimeOfDay;
-
-            return span;
+            Bios.RemoveAt(putStuff.Item1);
+            Bios.Insert(putStuff.Item1, putStuff.Item2);
         }
-
-        */
+        [HttpDelete]
+        public void Delete(String item)
+        {
+            Bios.RemoveAt(Convert.ToInt32(item));
+        }
     }
 }
+
