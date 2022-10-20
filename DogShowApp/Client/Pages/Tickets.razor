@@ -179,7 +179,7 @@
                                                 <Field>
                                                     <FieldLabel>Address</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsNotEmpty">
-                                                        <TextEdit @bind-Value="@streetAddress" Placeholder="123 Big Chungus Ln.">
+                                                        <TextEdit @bind-Text="@streetAddress" Placeholder="123 Big Chungus Ln.">
                                                             <Feedback>
                                                                 <ValidationError>Can't be empty!</ValidationError>
                                                             </Feedback>
@@ -190,7 +190,7 @@
                                                 <Field>
                                                     <FieldLabel>City</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsNotEmpty">
-                                                        <TextEdit @bind-Value="@city" Placeholder="New York">
+                                                        <TextEdit @bind-Text="@city" Placeholder="New York">
                                                             <Feedback>
                                                                 <ValidationError>Can't be empty!</ValidationError>
                                                             </Feedback>
@@ -252,7 +252,7 @@
                                                 <Field>
                                                     <FieldLabel>CVV</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsNotEmpty">
-                                                        <InputMask Mask="9999" Placeholder="XXX">
+                                                        <InputMask Mask="999" Placeholder="XXX">
                                                             <Feedback>
                                                                 <ValidationError>Can't be empty!</ValidationError>
                                                             </Feedback>
@@ -306,7 +306,7 @@
                     Name: @Login.user.FirstName @Login.user.LastName
                 </Paragraph>
                 <Paragraph>
-                    Address: @Login.user.streetAddress @Login.user.city @Login.user.state @Login.user.zipCode
+                    Address: @Login.user.streetAddress, @Login.user.city, @Login.user.state @Login.user.zipCode
                 </Paragraph>
                 <Paragraph>
                     Regular Tickets: @Login.user.numOfEventTickets | Price: @eventTicketPrice
