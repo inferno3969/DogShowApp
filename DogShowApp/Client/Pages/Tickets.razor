@@ -1,7 +1,6 @@
 ﻿@page "/tickets"
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
-@using Blazorise.LoadingIndicator
 @inject HttpClient Http
 @inject NavigationManager navigationManager
 
@@ -107,11 +106,11 @@
                         </JumbotronSubtitle>
                         <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
-                            Regular Tickets: @Login.user.numOfEventTickets | Price: @eventTicketPrice
+                            Regular Tickets: @numOfEventTicketsTemp | Price: @eventTicketPrice
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
                         <Paragraph>
-                            Season Tickets: @Login.user.numOfSeasonTickets | Price: @seasonTicketPrice
+                            Season Tickets: @numOfSeasonTicketsTemp | Price: @seasonTicketPrice
                         </Paragraph>
                         <Divider DividerType="DividerType.Solid" />
                         <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
@@ -146,9 +145,9 @@
         </StepPanel>
         <StepPanel Name="3">
             <Jumbotron Background="Background.Transparent" Margin="Margin.Is4.FromBottom">
-                <JumbotronTitle Size="JumbotronTitleSize.Is4">Hello, world!</JumbotronTitle>
+                <JumbotronTitle Size="JumbotronTitleSize.Is4">Checkout Form</JumbotronTitle>
                 <JumbotronSubtitle>
-                    This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                    Please fill out these forms to proceed to checkout.
                 </JumbotronSubtitle>
                 <Divider></Divider>
                 <Paragraph>
@@ -163,15 +162,15 @@
                                             <CardBody>
                                                 <Field>
                                                     <FieldLabel>Full Name</FieldLabel>
-                                                    <TextEdit Placeholder="Big M. Chungus" />
+                                                    <TextEdit @bind-Text="@tempFullName" Placeholder="Ex: Big M. Chungus" />
                                                 </Field>
 
                                                 <Field>
                                                     <FieldLabel>Email</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsEmail">
-                                                        <TextEdit Placeholder="bigchungus42069@gmail.com">
+                                                        <TextEdit @bind-Text="@tempEmail" Placeholder="Ex: bigchungus42069@gmail.com">
                                                             <Feedback>
-                                                                <ValidationError>Not a valid email!</ValidationError>
+                                                                <ValidationError>Not a valid email.</ValidationError>
                                                             </Feedback>
                                                         </TextEdit>
                                                     </Validation>
@@ -179,9 +178,9 @@
                                                 <Field>
                                                     <FieldLabel>Address</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsNotEmpty">
-                                                        <TextEdit @bind-Text="@streetAddress" Placeholder="123 Big Chungus Ln.">
+                                                        <TextEdit @bind-Text="@tempStreetAddress" Placeholder="Ex: 123 Big Chungus Ln.">
                                                             <Feedback>
-                                                                <ValidationError>Can't be empty!</ValidationError>
+                                                                <ValidationError>This field can not be left empty.</ValidationError>
                                                             </Feedback>
                                                         </TextEdit>
                                                     </Validation>
@@ -190,9 +189,9 @@
                                                 <Field>
                                                     <FieldLabel>City</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsNotEmpty">
-                                                        <TextEdit @bind-Text="@city" Placeholder="New York">
+                                                        <TextEdit @bind-Text="@tempCity" Placeholder="New York">
                                                             <Feedback>
-                                                                <ValidationError>Can't be empty!</ValidationError>
+                                                                <ValidationError>This field can not be left empty.</ValidationError>
                                                             </Feedback>
                                                         </TextEdit>
                                                     </Validation>
@@ -201,9 +200,9 @@
                                                 <Field>
                                                     <FieldLabel>State</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsUppercase">
-                                                        <InputMask @bind-Value="@state" Mask="aa" Placeholder="XX">
+                                                        <InputMask @bind-Value="@tempState" Mask="aa" Placeholder="XX">
                                                             <Feedback>
-                                                                <ValidationError>Can't be empty!</ValidationError>
+                                                                <ValidationError>Must be an uppercase two letter state.</ValidationError>
                                                             </Feedback>
                                                         </InputMask>
                                                     </Validation>
@@ -211,9 +210,9 @@
                                                 <Field>
                                                     <FieldLabel>Zip Code</FieldLabel>
                                                     <Validation Validator="ValidationRule.IsNotEmpty">
-                                                        <InputMask @bind-Value="@zipCode" Mask="99999" Placeholder="XXXXX">
+                                                        <InputMask @bind-Value="@tempZipCode" Mask="99999" Placeholder="XXXXX">
                                                             <Feedback>
-                                                                <ValidationError>Must be 5 characters!</ValidationError>
+                                                                <ValidationError>Must be 5 numbers.</ValidationError>
                                                             </Feedback>
                                                         </InputMask>
                                                     </Validation>
@@ -270,12 +269,12 @@
                                                 <Divider></Divider>
                                                 <Paragraph>Event Tickets</Paragraph>
                                                 <Divider></Divider>
-                                                <Paragraph>Quantity: @Login.user.numOfEventTickets</Paragraph>
+                                                <Paragraph>Quantity: @numOfEventTicketsTemp</Paragraph>
                                                 <Paragraph>Price: $@eventTicketPrice</Paragraph>
                                                 <Divider></Divider>
                                                 <Paragraph>Season Tickets</Paragraph>
                                                 <Divider></Divider>
-                                                <Paragraph>Quantity: @Login.user.numOfSeasonTickets</Paragraph>
+                                                <Paragraph>Quantity: @numOfSeasonTicketsTemp</Paragraph>
                                                 <Paragraph>Price: $@seasonTicketPrice</Paragraph>
                                                 <Divider></Divider>
                                                 <Paragraph>Total</Paragraph>
@@ -303,26 +302,49 @@
                 </JumbotronSubtitle>
                 <Divider DividerType="DividerType.Solid" />
                 <Paragraph>
-                    Name: @Login.user.FirstName @Login.user.LastName
+                    Date of Transaction: @DateTime.Now.ToShortDateString() @DateTime.Now.ToShortTimeString()
+                </Paragraph>
+                <Paragraph>
+                    Name: @Login.user.fullName
                 </Paragraph>
                 <Paragraph>
                     Address: @Login.user.streetAddress, @Login.user.city, @Login.user.state @Login.user.zipCode
                 </Paragraph>
                 <Paragraph>
-                    Regular Tickets: @Login.user.numOfEventTickets | Price: @eventTicketPrice
+                    Email: @Login.user.Email
                 </Paragraph>
                 <Divider DividerType="DividerType.Solid" />
                 <Paragraph>
-                    Season Tickets: @Login.user.numOfSeasonTickets | Price: @seasonTicketPrice
+                    Event Tickets
+                </Paragraph>
+                <Paragraph>
+                    Quantity: @Login.user.numOfEventTickets
+                </Paragraph>
+                <Paragraph>
+                    Price: $@eventTicketPrice
                 </Paragraph>
                 <Divider DividerType="DividerType.Solid" />
                 <Paragraph>
-                    Total Price of Transaction: @Login.user.numOfSeasonTickets | Price: @seasonTicketPrice
+                    Season Tickets
+                </Paragraph>
+                <Paragraph>
+                    Quantity: @Login.user.numOfSeasonTickets
+                </Paragraph>
+                <Paragraph>
+                    Price: $@seasonTicketPrice
                 </Paragraph>
                 <Divider DividerType="DividerType.Solid" />
-                <Button Color="Color.Primary" Clicked="@ShowModal">Edit Tickets</Button>
-                <Button Color="Color.Danger" Clicked="@CancelOrder">Cancel Order</Button>
-                <Button Color="Color.Success" Clicked="@Checkout">Checkout</Button>
+                <Paragraph>
+                    Transaction Total
+                </Paragraph>
+                <Paragraph>
+                    Quantity: @totalNumOfTickets
+                </Paragraph>
+                <Paragraph>
+                    Price: $@totalPrice
+                </Paragraph>
+                <Divider DividerType="DividerType.Solid" />
+                <Button Color="Color.Primary" Clicked="@ExitCheckout">Exit</Button>
             </Jumbotron>
         </StepPanel>
     </Content>
@@ -342,26 +364,38 @@
     Ticket ticket = new Ticket();
 
 
-
     private Steps stepsRef;
-    private string email;
+
     private string selectedStep = "1";
 
     int numOfEventTickets;
     int numOfSeasonTickets;
+    int numOfEventTicketsTemp;
+    int numOfSeasonTicketsTemp;
     int totalNumOfTickets;
 
     decimal eventTicketPrice;
     decimal seasonTicketPrice;
     decimal totalPrice;
 
-
+    [Required]
+    string tempFullName;
+    [Required]
+    string tempEmail;
+    [Required]
+    string tempStreetAddress;
+    [Required]
+    string tempCity;
+    [Required]
+    string tempState;
+    [Required]
+    string tempZipCode;
+    [Required]
     string creditCardNumber;
 
-    string streetAddress;
-    string city;
-    string state;
-    string zipCode;
+    bool firstStepDone;
+    bool secondStepDone;
+    bool thirdStepDone;
 
     private Modal modalRef;
 
@@ -372,20 +406,27 @@
 
     private Task HideModal()
     {
-        Login.user.numOfEventTickets = numOfEventTickets;
-        Login.user.numOfSeasonTickets = numOfSeasonTickets;
-        numOfEventTickets = ticket.numOfEventTickets * numOfEventTickets;
+        numOfEventTicketsTemp = numOfEventTickets;
+        numOfSeasonTicketsTemp = numOfSeasonTickets;
+        eventTicketPrice = ticket.eventTicketsPrice * numOfEventTickets;
         seasonTicketPrice = ticket.seasonTicketsPrice * numOfSeasonTickets;
         return modalRef.Hide();
     }
 
     private bool NavigationAllowed(StepNavigationContext context)
     {
-        if (context.CurrentStepIndex == 1 && context.NextStepIndex > 2)
+        if (context.CurrentStepIndex == 1 && context.NextStepIndex > 1 && firstStepDone == false)
         {
             return false;
         }
-
+        if (context.CurrentStepIndex == 2 && context.NextStepIndex > 2 && secondStepDone == false)
+        {
+            return false;
+        }
+        if (context.CurrentStepIndex == 3 && context.NextStepIndex > 3 && thirdStepDone == false)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -403,16 +444,18 @@
     {
         if (selectedTab == "eventticket")
         {
-            Login.user.numOfEventTickets += numOfEventTickets;
+            numOfEventTicketsTemp += numOfEventTickets;
             eventTicketPrice = ticket.eventTicketsPrice;
-            eventTicketPrice *= Login.user.numOfEventTickets;
+            eventTicketPrice *= numOfEventTicketsTemp;
         }
         if (selectedTab == "seasonticket")
         {
-            Login.user.numOfSeasonTickets += numOfSeasonTickets;
+            numOfSeasonTicketsTemp += numOfSeasonTickets;
             seasonTicketPrice = ticket.seasonTicketsPrice;
-            seasonTicketPrice *= Login.user.numOfSeasonTickets;
+            seasonTicketPrice *= numOfSeasonTicketsTemp;
         }
+        firstStepDone = true;
+
     }
 
     private void CancelOrder()
@@ -420,20 +463,20 @@
         Login.user.numOfEventTickets = 0;
         Login.user.numOfSeasonTickets = 0;
         navigationManager.NavigateTo("/");
-
     }
 
     private void Checkout()
     {
+        secondStepDone = true;
         selectedStep = "3";
         totalPrice = eventTicketPrice + seasonTicketPrice;
-        totalNumOfTickets = Login.user.numOfEventTickets + Login.user.numOfSeasonTickets;
+        totalNumOfTickets = numOfEventTicketsTemp + numOfSeasonTicketsTemp;
     }
 
     private void CancelTransaction()
     {
-        Login.user.numOfEventTickets = 0;
-        Login.user.numOfSeasonTickets = 0;
+        numOfEventTicketsTemp = 0;
+        numOfSeasonTicketsTemp = 0;
         totalPrice = 0;
         totalNumOfTickets = 0;
         navigationManager.NavigateTo("/");
@@ -441,11 +484,22 @@
 
     private void CompleteTransaction()
     {
-        Login.user.streetAddress = streetAddress;
-        Login.user.city = city;
-        Login.user.state = state;
-        Login.user.zipCode = zipCode;
+        Login.user.numOfEventTickets = numOfEventTicketsTemp;
+        Login.user.numOfSeasonTickets = numOfSeasonTicketsTemp;
+        Login.user.fullName = tempFullName;
+        Login.user.streetAddress = tempStreetAddress;
+        Login.user.city = tempCity;
+        Login.user.state = tempState;
+        Login.user.zipCode = tempZipCode;
+
+        thirdStepDone = true;
         selectedStep = "4";
+    }
+
+    private void ExitCheckout()
+    {
+
+        navigationManager.NavigateTo("/");
     }
 
 }

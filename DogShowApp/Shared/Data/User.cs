@@ -40,10 +40,11 @@ namespace DogShowApp.Shared.Data
         [MinLength(0, ErrorMessage = "You can't have negative amount of tickets.")]
         public int numOfSeasonTickets { get; set; } = 0;
 
-        public string? streetAddress { get; set; }
-        public string? city { get; set; }
-        public string? state { get; set; }
-        public string? zipCode { get; set; }
+        public string fullName { get; set; }
+        public string streetAddress { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string zipCode { get; set; }
 
         public User(string firstName, string lastName, string username, string email, string password, bool isAdmin)
         {

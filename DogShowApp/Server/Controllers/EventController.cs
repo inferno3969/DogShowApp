@@ -14,17 +14,14 @@ namespace DogShowApp.Server.Controllers
 
         private readonly ILogger<EventController> _logger;
 
-        private static DateOnly dateOnly = new DateOnly(2020, 04, 20);
-
-        private static TimeOnly timeOnly = new TimeOnly(10, 30);
-
         public EventController(ILogger<EventController> logger)
         {
             _logger = logger;
 
             if (Events.Count == 0)
             {
-                Events.Add(new Event("12/22/2022", "12:00 PM", "Test", "Test"));
+                Events.Add(new Event("12/22/2022", "12:00 PM", "Dog Olympics", "Dogs will compete in a dog-styled olympics."));
+                Events.Add(new Event("1/14/2023", "5:00 PM", "Who's The Best Dog?", "Dogs will compete over various events to find out who is the best dog!"));
             }
         }
 

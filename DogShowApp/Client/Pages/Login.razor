@@ -1,7 +1,6 @@
 ﻿@page "/login"
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
-@using Blazorise.LoadingIndicator
 @using System.Reflection
 @inject HttpClient Http
 @inject NavigationManager navigationManager
@@ -23,34 +22,34 @@
                 </CardBody>
                 <CardBody>
                     <Validations @ref="@loginValidationsRef" Mode="ValidationMode.Manual" ValidateOnLoad="false">
-                        <Validation Validator="ValidationRule.IsEmail">
+                        <Validation Validator="ValidationRule.IsNotEmpty">
                             <Field>
                                 <FieldLabel>Username</FieldLabel>
                                 <TextEdit @bind-Text="@username" Placeholder="Enter username...">
                                     <Feedback>
-                                        <ValidationNone>Please Enter Your Email. </ValidationNone>
-                                        <ValidationSuccess>Email is good</ValidationSuccess>
-                                        <ValidationError>Please Enter A Valid Email</ValidationError>
+                                        <ValidationNone>Please enter your username. </ValidationNone>
+                                        <ValidationSuccess>Username is valid.</ValidationSuccess>
+                                        <ValidationError>You can't leave this field blank!</ValidationError>
                                     </Feedback>
                                 </TextEdit>
                             </Field>
                         </Validation>
-                        <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Validation>
                             <Field>
                                 <FieldLabel>Password</FieldLabel>
-                                <TextEdit @bind-Text="@password" Placeholder="Enter Password.." />
+                                <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@password">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
                             </Field>
                         </Validation>
-                        <Field>
-                            <Check TValue="bool" @bind-Checked="@rememberMe">Remember Me</Check>
-                        </Field>
                     </Validations>
                 </CardBody>
                 <CardBody>
                     <Button Color="Color.Primary" Clicked="@OnLoginClicked">
                         Login
                     </Button>
-                    <Button Color="Color.Secondary">Forgot Password</Button>
                 </CardBody>
             </Card>
         </TabPanel>
@@ -157,7 +156,7 @@
     Validations loginValidationsRef;
     Validations registerValidationsRef;
 
-    string selectedTab = "register";
+    string selectedTab = "login";
 
     string firstName;
     string lastName;
@@ -167,6 +166,8 @@
     string confirmPassword;
     bool isAdmin;
     bool rememberMe;
+
+    bool visible;
 
     private Task OnSelectedTabChanged(string name)
     {
@@ -191,9 +192,8 @@
         }
         else
         {
-
+            visible = true;
         }
-
     }
 
     async Task OnRegisterClicked()

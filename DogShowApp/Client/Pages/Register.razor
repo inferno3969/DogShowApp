@@ -1,6 +1,7 @@
 ﻿@page "/register"
 @using DogShowApp.Shared.Data
 @using System.ComponentModel.DataAnnotations
+@using System.Reflection
 @inject HttpClient Http
 @inject NavigationManager navigationManager
 
@@ -21,32 +22,34 @@
                 </CardBody>
                 <CardBody>
                     <Validations @ref="@loginValidationsRef" Mode="ValidationMode.Manual" ValidateOnLoad="false">
-                        <Validation Validator="ValidationRule.IsEmail">
+                        <Validation Validator="ValidationRule.IsNotEmpty">
                             <Field>
                                 <FieldLabel>Username</FieldLabel>
                                 <TextEdit @bind-Text="@username" Placeholder="Enter username...">
                                     <Feedback>
-                                        <ValidationNone>Please Enter Your Email. </ValidationNone>
-                                        <ValidationSuccess>Email is good</ValidationSuccess>
-                                        <ValidationError>Please Enter A Valid Email</ValidationError>
+                                        <ValidationNone>Please enter your username. </ValidationNone>
+                                        <ValidationSuccess>Username is valid.</ValidationSuccess>
+                                        <ValidationError>You can't leave this field blank!</ValidationError>
                                     </Feedback>
                                 </TextEdit>
                             </Field>
                         </Validation>
-                        <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Validation>
                             <Field>
                                 <FieldLabel>Password</FieldLabel>
-                                <TextEdit @bind-Text="@password" Placeholder="Enter Password.." />
+                                <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@password">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </TextEdit>
                             </Field>
                         </Validation>
-                        <Field>
-                            <Check TValue="bool" @bind-Checked="@rememberMe">Remember Me</Check>
-                        </Field>
                     </Validations>
                 </CardBody>
                 <CardBody>
-                    <Button Color="Color.Primary" Clicked="@OnLoginClicked">Login</Button>
-                    <Button Color="Color.Secondary">Forgot Password</Button>
+                    <Button Color="Color.Primary" Clicked="@OnLoginClicked">
+                        Login
+                    </Button>
                 </CardBody>
             </Card>
         </TabPanel>
@@ -58,7 +61,7 @@
                     </CardTitle>
                 </CardBody>
                 <CardBody>
-                    <Validations Mode="ValidationMode.Auto" Model="@user">
+                    <Validations Mode="ValidationMode.Auto" Model="@user" ValidateOnLoad="false">
                         <Validation>
                             <Field Horizontal>
                                 <FieldLabel ColumnSize="ColumnSize.Is2">First Name</FieldLabel>
@@ -146,7 +149,6 @@
 
 
 @code {
-
     public static User user = new User();
 
     List<User>? userList;
@@ -165,6 +167,8 @@
     bool isAdmin;
     bool rememberMe;
 
+    bool visible;
+
     private Task OnSelectedTabChanged(string name)
     {
         selectedTab = name;
@@ -175,7 +179,6 @@
     async Task OnLoginClicked()
     {
         userList = await Http.GetFromJsonAsync<List<User>>($"User?username={username}&password={password}");
-
 
         if (isAdmin == false)
         {
@@ -189,9 +192,8 @@
         }
         else
         {
-
+            visible = true;
         }
-
     }
 
     async Task OnRegisterClicked()
@@ -202,7 +204,14 @@
         password = user.Password;
         username = user.Username;
 
-        HttpResponseMessage response = await Http.PostAsJsonAsync("User", user);
+        List<Object?> properties = new List<Object?>();
+
+        foreach (PropertyInfo prop in user.GetType().GetProperties())
+        {
+            properties.Add(prop.GetValue(user));
+        }
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync("User", properties);
 
         selectedTab = "login";
     }
