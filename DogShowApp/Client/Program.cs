@@ -9,6 +9,7 @@ namespace DogShowApp.Client
 {
     public class Program
     {
+        // Nate is poo poo
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);

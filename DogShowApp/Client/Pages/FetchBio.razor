@@ -1,0 +1,79 @@
+﻿@page "/fetchbio"
+@using DogShowApp.Shared.Data
+@inject HttpClient Http
+
+<PageTitle>Biographies</PageTitle>
+
+<h1>Dog Biographies</h1>
+
+<p></p>
+
+
+
+@if (bioList == null)
+{
+        <p><em>Loading...</em></p>
+}
+else
+{
+  
+        
+<div style="font-size:2.5em;">    
+ <DataGrid TItem="Bio"Data="@bioList" @bind-SelectedRow="@selectedBio" Responsive Context="context">
+ 
+    
+    <DataGridColumn TItem="Bio" Field="@nameof(Bio.DogImageURL)" Caption="" Width="50" >
+        <DisplayTemplate>
+            @{
+                Bio bio = context as Bio;
+                            <img src="@bio.DogImageURL" 
+                            style="width:256px"/>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+            
+    <DataGridCommandColumn />
+
+    <DataGridColumn Field="@nameof(Bio.DogName)" Caption="Dog's Name" Width="1" /> 
+    <DataGridColumn Field="@nameof(Bio.DogDescription)" Caption="Breed " Width="1" />
+    <DataGridColumn Field="@nameof(Bio.TrainerName)" Caption="Trainer's Name" Width="1" />
+    <DataGridColumn Field="@nameof(Bio.TrainerImageURL)" Caption="Bio" Width="100" />
+
+    </DataGrid>
+    </div>
+}
+
+
+@code {
+
+    private Bio? selectedBio;
+    private List<Bio>? bioList = new List<Bio>();
+    private DataGridEditMode editMode = DataGridEditMode.Form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<Bio>? _bioList = await Http.GetFromJsonAsync<List<Bio>>("Bio");
+
+        if (_bioList != null)
+        {
+            foreach (Bio _bio in _bioList)
+            {
+                bioList.Add(new Bio());
+                bioList.Last().DogName = _bio.DogName;
+                bioList.Last().DogDescription = _bio.DogDescription;
+                bioList.Last().TrainerName = _bio.TrainerName;
+                bioList.Last().DogImageURL = _bio.DogImageURL;
+                bioList.Last().TrainerImageURL = _bio.TrainerImageURL;
+            }
+        }
+    }
+
+
+
+
+    /*
+    Bio bio = new Bio();
+    private List<Bio>? bioList;
+    private Bio? selectedBio;
+    */
+}
