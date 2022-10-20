@@ -4,6 +4,7 @@ using DogShowApp.Shared.Data;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace DogShowApp.Server.Controllers
 {
@@ -39,11 +40,15 @@ namespace DogShowApp.Server.Controllers
         }
 
         [HttpGet]
-        public Bios Get()
+        public BioController(ILogger<EventController> logger)
         {
-            return Bios;
-        }
+            _logger = logger;
 
+            if (Bio.Count == 0)
+            {
+                Events.Add(new Event("12/22/2022", "12:00 PM", "Test", "Test"));
+            }
+        }
         [HttpPut]
         public void Put(Tuple<Int32, List<Object?>> properties)
         {
