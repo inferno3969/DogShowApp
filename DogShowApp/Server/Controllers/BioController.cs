@@ -54,10 +54,10 @@ namespace DogShowApp.Server.Controllers
             Bios[subscript] = newBio;
         }
         [HttpDelete]
-        public void Delete(string? item)
+        public void Delete(Bio selectedBio)
         {
-       
-        Bios.RemoveAt(Convert.ToInt32(item));
+
+            Bios.Remove(selectedBio);
         }
     }
 }
